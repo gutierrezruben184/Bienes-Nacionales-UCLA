@@ -1,0 +1,16 @@
+
+
+.MuiButtonBase-root, .MuiListItemIcon-root {
+	color: #788195 !important;
+}
+
+
+.makeStyles-toolbar-9 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+table {
+	background-color: #fff;
+}

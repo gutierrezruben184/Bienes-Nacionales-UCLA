@@ -1,0 +1,60 @@
+CREATE TABLE Decanato (
+  idDecanato SERIAL NOT NULL, 
+  nombre     varchar(50) NOT NULL, 
+  direccion  varchar(70) NOT NULL, 
+  estatus    varchar(1) NOT NULL, 
+  PRIMARY KEY (idDecanato));
+CREATE TABLE Departamento (
+  idUnidad      SERIAL NOT NULL, 
+  nombre        varchar(50) NOT NULL, 
+  fk_Decanatoid int4 NOT NULL, 
+  estatus       varchar(1) NOT NULL, 
+  PRIMARY KEY (idUnidad));
+CREATE TABLE Equipo (
+  idEquipo          SERIAL NOT NULL, 
+  nombre            varchar(30) NOT NULL, 
+  fk_idMarca        int4 NOT NULL, 
+  fk_idDepartamento int4 NOT NULL, 
+  fk_idEstadoEquipo int4 NOT NULL, 
+  PRIMARY KEY (idEquipo));
+CREATE TABLE Equipo_Reporte_Solicitud (
+  pk_Equipoid            int4 NOT NULL, 
+  pk_Reporte_Solicitudid int4 NOT NULL, 
+  fechaRegistro          date NOT NULL, 
+  PRIMARY KEY (pk_Equipoid, 
+  pk_Reporte_Solicitudid));
+CREATE TABLE Estado_Equipo (
+  idEstadoEquipo SERIAL NOT NULL, 
+  tipo           varchar(30) NOT NULL, 
+  PRIMARY KEY (idEstadoEquipo));
+CREATE TABLE Marca (
+  idMarca SERIAL NOT NULL, 
+  nombre  varchar(30) NOT NULL, 
+  PRIMARY KEY (idMarca));
+CREATE TABLE Reporte_Solicitud (
+  idReporte        SERIAL NOT NULL, 
+  fk_Usuariocedula varchar(10) NOT NULL, 
+  Equipoid         int4 NOT NULL, 
+  tipo             varchar(1) NOT NULL, 
+  descripcion      varchar(500) NOT NULL, 
+  observacion      varchar(500) NOT NULL, 
+  estatus          varchar(1) NOT NULL, 
+  PRIMARY KEY (idReporte));
+CREATE TABLE Usuario (
+  cedula      varchar(10) NOT NULL, 
+  contrasenna varchar(10) NOT NULL, 
+  fk_Unidadid int4, 
+  nombre      varchar(15) NOT NULL, 
+  apellido    varchar(20) NOT NULL, 
+  correo      varchar(50) NOT NULL, 
+  tipo        varchar(1) NOT NULL, 
+  estatus     varchar(1) NOT NULL, 
+  PRIMARY KEY (cedula));
+ALTER TABLE Equipo_Reporte_Solicitud ADD CONSTRAINT asociado FOREIGN KEY (pk_Reporte_Solicitudid) REFERENCES Reporte_Solicitud (idReporte);
+ALTER TABLE Departamento ADD CONSTRAINT compuesto FOREIGN KEY (fk_Decanatoid) REFERENCES Decanato (idDecanato);
+ALTER TABLE Reporte_Solicitud ADD CONSTRAINT hace FOREIGN KEY (fk_Usuariocedula) REFERENCES Usuario (cedula);
+ALTER TABLE Equipo ADD CONSTRAINT pertenece FOREIGN KEY (fk_idMarca) REFERENCES Marca (idMarca);
+ALTER TABLE Equipo ADD CONSTRAINT posee FOREIGN KEY (fk_idDepartamento) REFERENCES Departamento (idUnidad);
+ALTER TABLE Equipo_Reporte_Solicitud ADD CONSTRAINT requiere FOREIGN KEY (pk_Equipoid) REFERENCES Equipo (idEquipo);
+ALTER TABLE Equipo ADD CONSTRAINT tiene FOREIGN KEY (fk_idEstadoEquipo) REFERENCES Estado_Equipo (idEstadoEquipo);
+ALTER TABLE Usuario ADD CONSTRAINT trabaja FOREIGN KEY (fk_Unidadid) REFERENCES Departamento (idUnidad);
