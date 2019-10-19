@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.lab2</groupId>
-    <artifactId>Bienes-Nacionales-UCLA</artifactId>
+    <artifactId>backend</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>Bienes-Nacionales-UCLA</name>
+    <name>backend</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -56,12 +56,45 @@
             <version>42.2.8</version>
         </dependency>
         
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>1.19.4</version>
+        </dependency>
+        
         <!-- ############### -->
+        
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.29.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.10.7</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.10.7</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.10.7</version>
+            <scope>runtime</scope>
+        </dependency>
+
+      
             
         
     </dependencies>
 
     <build>
+        
         <plugins>
             
             <!-- Deploy de maven en tomcat -->
@@ -71,9 +104,9 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <url>http://localhost:8080/Bienes-Nacionales-UCLA</url>
+                    <url>http://localhost:8080/backend</url>
                     <server>TomcatServer</server>
-                    <path>/Bienes-Nacionales-UCLA</path>
+                    <path>/backend</path>
                 </configuration>
             </plugin>
             
