@@ -5,31 +5,87 @@ import axios from "axios";
 export default function MaterialTableDemo() {
   const [state, setState] = React.useState([]);
 
-  async function getDepartamento(){
+  async function refresh() {
+    const response = await getDepartamentos()
+   
+      console.log(response)
+      //return response
+      setState(response)
+  }
+
+  async function getDepartamentos(){
     try{
       const response = await axios({
-        url: `http://localhost:8080/UCLA-BN/webresources/api.departamento`,
+        url: `http://localhost:52694/backend/webresources/api.departamento`,
         method: 'GET'
       })
       return response.data
-
-    } catch(e){
-      console.log(e)
-
+      } catch(e){
+        console.log(e)
     }
   }
-  
+
+  async function postDepartamentos(datos){
+    try{
+      const response = await axios({
+        url: `http://localhost:52694/backend/webresources/api.departamento`,
+        method: 'POST',
+        data: {
+                nombre: datos.nombre,
+                decanato: datos.fk_decanatoid,
+                estatus: datos.estatus          
+              }
+      })
+      refresh();
+      return response.data
+      } catch(e){
+        console.log(e)
+    }
+  }
+
+  async function updateDepartamentos(newData, oldData){
+    try{
+      const response = await axios({
+        url: `http://localhost:52694/backend/webresources/api.departamento/`+oldData.iddepartamento,
+        method: 'PUT',
+        data: {
+                nombre: newData.nombre,
+                decanato: newData.fk_decanatoid,
+                estatus: newData.estatus,
+                iddepartamento  : newData.iddepartamento     
+              }
+      })
+      refresh();
+      return response.data
+      } catch(e){
+        console.log(e)
+    }
+  }
+
+  async function deleteDepartamentos(id){
+    try{
+      const response = await axios({
+        url: `http://localhost:52694/backend/webresources/api.departamento/`+id,
+        method: 'DELETE',
+        })
+        refresh();
+        return response.data
+      } catch(e){
+        console.log(e)
+    }
+  }
+
   useEffect(() => {
     async function loadDepartamentos () {
-      const response = await getDepartamento()
-       
+      const response = await getDepartamentos()
+     
         console.log(response)
         //return response
         setState(response)
     }
     loadDepartamentos()
-    
   }, []);
+
 
   return (
     <MaterialTable
@@ -37,7 +93,7 @@ export default function MaterialTableDemo() {
       columns={[
         { title: 'Nombre', field: 'nombre' },
         { title: 'Decanato', field: 'fk_decanatoid' },
-        { title: 'Estatus', field: 'estatus' }
+        { title: 'Estatus', field: 'estatus', lookup: {A:"Activo",I:"Inactivo"} }
         ]}
       data={state}
       editable={{
@@ -45,27 +101,30 @@ export default function MaterialTableDemo() {
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              const data = [...state.data];
-              data.push(newData);
-              setState({ ...state, data });
+              postDepartamentos(newData);
+              // const data = [...state.data];
+              // data.push(newData);
+              // setState({ ...state, data });
             }, 600);
           }),
         onRowUpdate: (newData, oldData) =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              const data = [...state.data];
-              data[data.indexOf(oldData)] = newData;
-              setState({ ...state, data });
+              updateDepartamentos(newData, oldData)
+              // const data = [...state.data];
+              // data[data.indexOf(oldData)] = newData;
+              // setState({ ...state, data });
             }, 600);
           }),
         onRowDelete: oldData =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              const data = [...state.data];
-              data.splice(data.indexOf(oldData), 1);
-              setState({ ...state, data });
+              deleteDepartamentos(oldData.iddepartamento);
+              // const data = [...state.data];
+              // data.splice(data.indexOf(oldData), 1);
+              // setState({ ...state, data });
             }, 600);
           }),
       }}
