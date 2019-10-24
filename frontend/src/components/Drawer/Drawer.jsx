@@ -44,10 +44,12 @@ const useStyles = makeStyles(theme => ({
     })
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
+    color: '#788195'
   },
   hide: {
-    display: "none"
+    display: "none",
+    color: '#788195'
   },
   drawer: {
     width: drawerWidth,
@@ -109,6 +111,9 @@ const useStyles = makeStyles(theme => ({
   botones: {
     color: '#788195'
   },
+  gris: {
+    color: '#788195'
+  }
 }));
 
 export default function MiniDrawer() {
@@ -137,7 +142,7 @@ export default function MiniDrawer() {
           root: classes.toolbarRoot
         }}>
           <IconButton className={classes.iconButton}
-            color="inherit"
+            color="#788195"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
@@ -171,7 +176,7 @@ export default function MiniDrawer() {
               B.N. UCLA
             </Typography>
           </div>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerClose} className={classes.gris}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
             ) : (
@@ -187,7 +192,7 @@ export default function MiniDrawer() {
                 <ListItemIcon className={classes.botones}>
                   {index % 2 === 0 ? <InboxIcon className={classes.botones} /> : <MailIcon className={classes.botones}/>}
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={text} className={classes.gris}/>
               </ListItem>
             )
           )}

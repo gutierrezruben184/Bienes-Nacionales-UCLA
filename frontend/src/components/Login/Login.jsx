@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
+import image from '../../assets/img/ucla.jpg';
+
 
 import Modal from '../Modal';
 
@@ -20,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     height: "100vh"
   },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
+    backgroundImage: `url(${image})`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     backgroundPosition: "center"
@@ -44,44 +46,42 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// const Transition = React.forwardRef(function Transition(props, ref) {
-//   return <Slide direction="up" ref={ref} {...props} />;
-// });
-
 export default function SignInSide(props) {
   const classes = useStyles();
 
   const [values, setValues] = useState({
     cedula: "",
     contrasenna: "",
-    open: false
+    open: false,
+    message: ''
   });
 
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setValues({...values, open:false});
-    axios
+    await axios
       .post(
         `http://localhost:8080/backend-lab2/webresources/api.usuario/login/${values.cedula}/${values.contrasenna}`
       )
       .then(
         res => {
-          console.log(res);
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('tipoUsuario', res.data.tipo);
           localStorage.setItem('cedula', res.data.cedula);
           localStorage.setItem('dpto', res.data.depto);
           localStorage.setItem('nombre', res.data.depto);
-          console.log(localStorage.getItem('token'));
-          //window.location.href = "/Menu";
+          window.location.href = "/menu";
         },
         error => {
           console.log(error);
-          setValues({cedula:'',contrasenna:'', open: true });
+          setValues({cedula:'',contrasenna:'', open: true, message: 'La cedula o la contraseña no son validas, por favor verique los datos y vuelva a intentar' });
+          //solo para probar
+          // localStorage.setItem('token', '123');
+          // window.location.href = "/menu";
         }
       );
   };
@@ -138,30 +138,12 @@ export default function SignInSide(props) {
             </Button>
 
 
-            {values.open ? <Modal /> : ''}
-
-            {/* <Dialog
-              open={values.open}
-              TransitionComponent={Transition}
-              keepMounted
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-slide-title"
-              aria-describedby="alert-dialog-slide-description"
-            >
-              <DialogTitle id="alert-dialog-slide-title">
-                {"Error al iniciar sesion"}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                  Cedula o contraseña inválida
-                </DialogContentText>
-              </DialogContent>
-            </Dialog> */}
+            {values.open ? <Modal message={values.message} /> : ''}
 
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
-                  Forgot contrasenna?
+                  ¿Olvidó su contraseña?
                 </Link>
               </Grid>
             </Grid>

@@ -9,12 +9,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Modal() {
+export default function Modal(props) {
   const [open, setOpen] = React.useState(true);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -30,10 +26,10 @@ export default function Modal() {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Error al iniciar Sesión"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">Error al iniciar sesion</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            La cedula o la contraseña no son validas, por favor verique los datos y vuelva a intentar
+            {props.message}
           </DialogContentText>
         </DialogContent>
       </Dialog>
