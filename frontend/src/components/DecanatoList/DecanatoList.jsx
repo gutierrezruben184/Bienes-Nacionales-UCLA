@@ -1,58 +1,137 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
+import axios from "axios";
 
 export default function MaterialTableDemo() {
-  const [state, setState] = React.useState({
-    columns: [
-      { title: 'Nombre', field: 'nombre' },
-      { title: 'Dirección', field: 'direccion' },
-      { title: 'Estatus', field: 'estatus' },
-    ],
-    data: [
-      { 
-        nombre: 'Ciencias y tecnologias', 
-        direccion: 'Obelisco', 
-        estatus: 'Activo' 
-      },
-      { 
-        nombre: 'Ingenieria Civil', 
-        direccion: 'Zona Indutrial',
-        estatus: 'Activo',
-      },
-    ],
-  });
+  const [state, setState] = React.useState([]);
+
+
+  async function refresh() {
+    const response = await getDecanatos()
+   
+      console.log(response)
+      //return response
+      setState(response)
+  }
+
+  async function getDecanatos(){
+    try{
+      const response = await axios({
+        url: `http://localhost:52694/backend/webresources/api.decanato`,
+        method: 'GET'
+      })
+      return response.data
+      } catch(e){
+        console.log(e)
+    }
+  }
+
+  async function postDecanatos(datos){
+    try{
+      const response = await axios({
+        url: `http://localhost:52694/backend/webresources/api.decanato`,
+        method: 'POST',
+        data: {
+                nombre: datos.nombre,
+                direccion: datos.direccion,
+                estatus: datos.estatus          
+              }
+      })
+      refresh();
+      return response.data
+      } catch(e){
+        console.log(e)
+    }
+  }
+
+  async function updateDecanatos(newData, oldData){
+    try{
+      const response = await axios({
+        url: `http://localhost:52694/backend/webresources/api.decanato/`+oldData.iddecanato,
+        method: 'PUT',
+        data: {
+                nombre: newData.nombre,
+                direccion: newData.direccion,
+                estatus: newData.estatus,
+                iddecanato  : newData.iddecanato     
+              }
+      })
+      refresh();
+      return response.data
+      } catch(e){
+        console.log(e)
+    }
+  }
+
+  async function deleteDecanatos(id){
+    try{
+      const response = await axios({
+        url: `http://localhost:52694/backend/webresources/api.decanato/`+id,
+        method: 'DELETE',
+        })
+        refresh();
+        return response.data
+      } catch(e){
+        console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    async function loadDecanatos () {
+      const response = await getDecanatos()
+     
+        console.log(response)
+        //return response
+        setState(response)
+    }
+    loadDecanatos()
+  }, []);
+
+
 
   return (
     <MaterialTable
       title="Lista de Decanatos"
-      columns={state.columns}
-      data={state.data}
+      columns = {[
+        { title: 'Nombre', field: 'nombre' },
+        { title: 'Dirección', field: 'direccion' },
+        { title: 'Estatus', field: 'estatus', lookup: {A:"Activo",I:"Inactivo"}},
+      ]}
+      data={state}
       editable={{
         onRowAdd: newData =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              const data = [...state.data];
+              console.log(newData);
+              postDecanatos(newData);
+              /* const data = [...state];
               data.push(newData);
-              setState({ ...state, data });
+              console.log(newData);
+              setState({ ...state, data }); */
             }, 600);
           }),
         onRowUpdate: (newData, oldData) =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              const data = [...state.data];
+              console.log(oldData);
+              console.log(newData);
+              updateDecanatos(newData, oldData)
+              /* const data = [...state.data];
               data[data.indexOf(oldData)] = newData;
-              setState({ ...state, data });
+              setState({ ...state, data }); */
             }, 600);
           }),
         onRowDelete: oldData =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              const data = [...state.data];
+              console.log(oldData)
+              deleteDecanatos(oldData.iddecanato);
+              /* const data = [...state.data];
               data.splice(data.indexOf(oldData), 1);
-              setState({ ...state, data });
+              setState({ ...state, data }); */
             }, 600);
           }),
       }}
