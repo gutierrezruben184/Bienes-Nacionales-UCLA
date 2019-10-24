@@ -17,12 +17,37 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
+import { Switch, Route, NavLink } from "react-router-dom"
 import Header from "../Header/Header";
 import DecanatoList from "../DecanatoList/DecanatoList";
+import Departamento from "../Departamento/Departamento";
 
 import "./style.css";
 
 const drawerWidth = 240;
+
+const list = [
+  {
+    name : "Decanatos",
+    route : "/decanatos"
+  },
+  {
+    name : "Departamentos",
+    route : "/departamentos"
+  },
+  {
+    name : "Equipos", 
+    route : "/equipos"
+  },
+  {
+    name : "Marcas", 
+    route : "/marcas"
+  },
+  {
+    name : "Empleados",
+    route : "/empleados"
+  } 
+]
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -112,6 +137,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function MiniDrawer() {
+
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -141,9 +167,7 @@ export default function MiniDrawer() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open
-            })}
+            
           >
             <MenuIcon />
           </IconButton>
@@ -151,63 +175,79 @@ export default function MiniDrawer() {
           <Header />
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open
-        })}
-        classes={{
-          paper:  clsx({
+      
+        <Drawer
+          variant="permanent"
+          className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open, 
-          })
-        }}
-        open={open}
-      >
-        <div className={classes.toolbar}>
-          <div className={classes.mainTitle}>
-            <Typography className={classes.mainTitleH2} variant="h2" gutterBottom>
-              B.N. UCLA
-            </Typography>
+            [classes.drawerClose]: !open
+          })}
+          classes={{
+            paper:  clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open, 
+            })
+          }}
+          open={open}
+        >
+          <div className={classes.toolbar}>
+            <div className={classes.mainTitle}>
+              <Typography className={classes.mainTitleH2} variant="h2" gutterBottom>
+                B.N. UCLA
+              </Typography>
+            </div>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
           </div>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
+          <Divider />
+          <List>
+            {list.map(
+              (item, index) => (
+                
+                  <NavLink 
+                    to={item.route}
+                    activeStyle={{
+                      textDecoration: "none"
+                    }}
+                  >
+                    <ListItem button key={item.name} >
+                      <ListItemIcon className={classes.botones}>
+                        {index % 2 === 0 ? <InboxIcon className={classes.botones} /> : <MailIcon className={classes.botones}/>}
+                      </ListItemIcon>
+                      <ListItemText primary={item.name} />
+                    </ListItem>
+                  </NavLink>
+                  
+              )
             )}
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          {["Decanatos", "Departamentos", "Equipos", "Marcas", "Empleados"].map(
-            (text, index) => (
+          </List>
+          <Divider />
+          <List>
+            {["Reporte de Solicitud"].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon className={classes.botones}>
-                  {index % 2 === 0 ? <InboxIcon className={classes.botones} /> : <MailIcon className={classes.botones}/>}
+                  {index % 2 === 0 ? <InboxIcon className={classes.botones}/> : <MailIcon className={classes.botones} />}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
-            )
-          )}
-        </List>
-        <Divider />
-        <List>
-          {["Reporte de Solicitud"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon className={classes.botones}>
-                {index % 2 === 0 ? <InboxIcon className={classes.botones}/> : <MailIcon className={classes.botones} />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <DecanatoList />
-      </main>
+            ))}
+          </List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          
+            <Switch> 
+              <Route exact path="/decanatos" component={DecanatoList}  />
+              <Route  path="/departamentos" component={Departamento}  />
+            </Switch>
+  
+        </main>
+      
     </div>
   );
 }
