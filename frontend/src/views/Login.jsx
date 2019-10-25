@@ -17,6 +17,8 @@ import image from '../assets/img/ucla.jpg';
 
 import Modal from '../components/Modal';
 
+const localhost= '192.168.43.244:8080'
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: "100vh"
@@ -65,10 +67,11 @@ export default function SignInSide(props) {
     setValues({...values, open:false});
     await axios
       .post(
-        `http://localhost:8080/backend-lab2/webresources/api.usuario/login/${values.cedula}/${values.contrasenna}`
+        `http://${localhost}/backend/webresources/api.usuario/login/${values.cedula}/${values.contrasenna}`
       )
       .then(
         res => {
+          console.log(res);
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('tipoUsuario', res.data.tipo);
           localStorage.setItem('cedula', res.data.cedula);
@@ -81,7 +84,7 @@ export default function SignInSide(props) {
           setValues({cedula:'',contrasenna:'', open: true, message: 'La cedula o la contraseña no son validas, por favor verique los datos y vuelva a intentar' });
           //solo para probar
           localStorage.setItem('token', '123');
-          window.location.href = "/menu";
+          window.location.href = "/menu/decanato";
         }
       );
   };
@@ -106,7 +109,7 @@ export default function SignInSide(props) {
               required
               fullWidth
               id="cedula"
-              label="cedula"
+              label="Cedula"
               name="cedula"
               autoComplete="cedula"
               autoFocus
@@ -119,7 +122,7 @@ export default function SignInSide(props) {
               required
               fullWidth
               name="contrasenna"
-              label="contraseña"
+              label="Contraseña"
               type="password"
               id="contrasenna"
               autoComplete="current-contrasenna"
