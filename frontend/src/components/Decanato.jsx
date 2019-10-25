@@ -90,6 +90,7 @@ export default function MaterialTableDemo() {
 
 
   return (
+  
     <MaterialTable
       title="Lista de Decanatos"
       columns = {[
@@ -136,5 +137,6 @@ export default function MaterialTableDemo() {
           }),
       }}
     />
+
   );
 }

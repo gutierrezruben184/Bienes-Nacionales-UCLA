@@ -17,10 +17,15 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import { Switch, Route, NavLink } from "react-router-dom"
-import Header from "../Header/Header";
-import DecanatoList from "../DecanatoList/DecanatoList";
-import Departamento from "../Departamento/Departamento";
+import { NavLink } from "react-router-dom"
+import Header from "../../components/Header";
+import AppRouter from '../../components/AppRouter'
+import Badge from '@material-ui/core/Badge';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { Switch, Route } from 'react-router-dom';
+import Decanato from '../../components/Decanato'
+import Departamento from '../../components/Departamento'
+
 
 import "./style.css";
 
@@ -28,24 +33,29 @@ const drawerWidth = 240;
 
 const list = [
   {
-    name : "Decanatos",
-    route : "/decanatos"
+    name : "Decanato",
+    route : "menu/decanato",
+    key: 1
   },
   {
     name : "Departamentos",
-    route : "/departamentos"
+    route : "/menu/departamento",
+    key: 2
   },
   {
     name : "Equipos", 
-    route : "/equipos"
+    route : "/equipos",
+    key: 3
   },
   {
     name : "Marcas", 
-    route : "/marcas"
+    route : "/marcas",
+    key: 4
   },
   {
     name : "Empleados",
-    route : "/empleados"
+    route : "/empleados",
+    key: 5
   } 
 ]
 
@@ -55,22 +65,24 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
     marginRight: 36,
-    color: '#788195'
+  },
+  menuButtonHidden: {
+    display: 'none',
   },
   hide: {
     display: "none",
@@ -102,6 +114,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   toolbar: {
+    paddingRight: 24, // keep right padding when drawer closed
+  },
+  toolbarC: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
@@ -127,18 +142,18 @@ const useStyles = makeStyles(theme => ({
     verticalAlign: 'middle',
     lineHeight: 'normal'
   },
-  toolbarRoot:{
-    backgroundColor: '#fff'
-  },
   iconButton:{
-    color: '#fff',
+    color: '#788195',
   },
   botones: {
     color: '#788195'
   },
   gris: {
     color: '#788195'
-  }
+  },
+  title: {
+    flexGrow: 1,
+  },
 }));
 
 export default function MiniDrawer() {
@@ -158,28 +173,29 @@ export default function MiniDrawer() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open
-        })}
-      >
-        <Toolbar classes={{
-          root: classes.toolbarRoot
-        }}>
-          <IconButton className={classes.iconButton}
-            color="#788195"
+      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton
+            edge="start"
+            color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
-            edge="start"
-            
+            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
             <MenuIcon />
           </IconButton>
-
-          <Header />
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+            Dashboard
+          </Typography>
+          <IconButton color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          
         </Toolbar>
       </AppBar>
+
       
         <Drawer
           variant="permanent"
@@ -201,11 +217,11 @@ export default function MiniDrawer() {
                 B.N. UCLA
               </Typography>
             </div>
-            <IconButton onClick={handleDrawerClose}>
+            <IconButton onClick={handleDrawerClose} className={classes.gris}>
               {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
+                <ChevronRightIcon className={classes.gris}/>
               ) : (
-                <ChevronLeftIcon />
+                <ChevronLeftIcon className={classes.gris} />
               )}
             </IconButton>
           </div>
@@ -216,12 +232,14 @@ export default function MiniDrawer() {
                 
                   <NavLink 
                     to={item.route}
-                    activeStyle={{
-                      textDecoration: "none"
-                    }}
+                    // activeStyle={{
+                    //   textDecoration: "none"
+                    // }}
+                    activeClassName="selectedLink"
+                    key={index}
                   >
                     <ListItem button key={item.name} >
-                      <ListItemIcon className={classes.botones}>
+                      <ListItemIcon className={classes.botones, classes.gris}>
                         {index % 2 === 0 ? <InboxIcon className={classes.botones} /> : <MailIcon className={classes.botones}/>}
                       </ListItemIcon>
                       <ListItemText primary={item.name} />
@@ -244,13 +262,11 @@ export default function MiniDrawer() {
           </List>
         </Drawer>
         <main className={classes.content}>
-          <div className={classes.toolbar} />
-          
-            <Switch> 
-              <Route exact path="/decanatos" component={DecanatoList}  />
-              <Route  path="/departamentos" component={Departamento}  />
-            </Switch>
-  
+          <div className={classes.toolbarC} />
+              <Switch>
+                <Route path='/menu/decanato' component={Decanato} key={0} />
+                <Route path='/menu/departamento' component={Departamento} key={1} />
+              </Switch>
         </main>
       
     </div>

@@ -10,7 +10,6 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import './style.css';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -40,15 +39,6 @@ const useStyles = makeStyles(theme => ({
       width: 'auto',
     },
   },
-  searchIcon: {
-    width: theme.spacing(7),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   inputRoot: {
     color: 'inherit',
   },
@@ -72,9 +62,7 @@ const useStyles = makeStyles(theme => ({
       display: 'none',
     },
   },
-  toolbar: {
-    backgroundColor: '#fff'
-  },
+
 }));
 
 export default function PrimarySearchAppBar() {
@@ -167,9 +155,7 @@ export default function PrimarySearchAppBar() {
   return (
     <div className={classes.grow}>
       <AppBar position="static">
-        <Toolbar classes={{
-          root: classes.toolbar
-        }}>
+        <Toolbar className={classes.toolbar}>
           {/* aqui iba el searchbar */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -202,8 +188,6 @@ export default function PrimarySearchAppBar() {
           </div>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function NotFound404()  {
   				<Typography variant="h4" gutterBottom>
 			       PAGINA NO ENCONTRADA
 			     </Typography>
-			     <Button variant="contained" href="/" color="primary" className={classes.button}>
+			     <Button variant="contained" href="/menu" color="primary" className={classes.button}>
 			        <HomeRoundedIcon fontSize='large' />
               Volver
 			     </Button>
