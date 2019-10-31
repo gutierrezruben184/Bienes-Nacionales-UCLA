@@ -7,13 +7,25 @@ import Equipo from "./components/Equipo";
 
 export default class AppRouter extends React.Component {
   render() {
+    const us = localStorage.getItem("tipoUsuario");
     return (
       <Switch>
-        <Route path="/menu/decanato" component={Decanato} key={0} />
-        <Route path="/menu/departamento" component={Departamento} />
-        <Route path="/menu/marca" component={Marca} />
-        <Route path="/menu/equipo" component={Equipo} />
-        <Redirect from="/menu" to="/menu/departamento" />
+        {us === "1" ? (
+          // Rutas para el admin
+          <React.Fragment>
+            <Route path="/menu/decanato" component={Decanato} />
+            <Route path="/menu/departamento" component={Departamento} />
+            <Route path="/menu/marca" component={Marca} />
+            <Route path="/menu/equipo" component={Equipo} />
+            <Redirect from="/menu" to="/menu/departamento" />
+          </React.Fragment>
+        ) : (
+          // Rutas para el empleado
+          <React.Fragment>
+            <Route path="/menu/equipo" component={Equipo} />
+            <Redirect from="/menu" to="/menu/equipo" />
+          </React.Fragment>
+        )}
       </Switch>
     );
   }

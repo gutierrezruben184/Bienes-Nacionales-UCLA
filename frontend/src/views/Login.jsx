@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
-
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,13 +9,9 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-
 import image from '../assets/img/ucla.jpg';
-
-
-import Modal from '../components/Modal';
-
-const localhost= '192.168.43.244:8080'
+import API from "../utils/API"
+import Swal from 'sweetalert2';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,8 +48,6 @@ export default function SignInSide(props) {
   const [values, setValues] = useState({
     cedula: "",
     contrasenna: "",
-    open: false,
-    message: ''
   });
 
   const handleChange = name => event => {
@@ -64,11 +56,8 @@ export default function SignInSide(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setValues({...values, open:false});
-    await axios
-      .post(
-        `http://${localhost}/backend/webresources/api.usuario/login/${values.cedula}/${values.contrasenna}`
-      )
+    //setValues({...values, open:false});
+    await API.post(`/api.usuario/login/${values.cedula}/${values.contrasenna}`)
       .then(
         res => {
           console.log(res);
@@ -81,10 +70,20 @@ export default function SignInSide(props) {
         },
         error => {
           console.log(error);
-          setValues({cedula:'',contrasenna:'', open: true, message: 'La cedula o la contraseña no son validas, por favor verique los datos y vuelva a intentar' });
-          //solo para probar
+          setValues({cedula:'',contrasenna:''});
+          Swal.fire({
+            type: 'error',
+            title: 'Error al iniciar sesión',
+            text: 'Por favor verique los datos y vuelva a intentar',
+          })
+          //solo para probar////////////////////
           localStorage.setItem('token', '123');
-          window.location.href = "/menu/decanato";
+          localStorage.setItem('tipoUsuario','2');
+          localStorage.setItem('cedula', '25147289');
+          localStorage.setItem('dpto', 'investigacion de operaciones');
+          localStorage.setItem('nombre', 'Ruben');
+           window.location.href = "/menu/decanato";
+           ///////////////////////
         }
       );
   };
@@ -139,10 +138,6 @@ export default function SignInSide(props) {
             >
               Iniciar Sesión
             </Button>
-
-
-            {values.open ? <Modal message={values.message} /> : ''}
-
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">

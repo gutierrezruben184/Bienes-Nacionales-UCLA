@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -43,7 +43,7 @@ const list = [
   },
   {
     name: "Equipos",
-    route: "/menu/equipos",
+    route: "/menu/equipo",
     key: 3,
     icon: <LaptopWindowsIcon />
   },
@@ -170,6 +170,9 @@ const useStyles = makeStyles(theme => ({
 export default function MiniDrawer() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  // importar nombre del departamento
+  //const nombreUsuario = localStorage.getItem('nombre')
+  const tipoUsuario = localStorage.getItem('tipoUsuario')
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -238,7 +241,7 @@ export default function MiniDrawer() {
             color="inherit"
             noWrap
             className={classes.title}
-          ></Typography>
+          >{localStorage.getItem('nombre')}</Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon className={classes.gris} />
@@ -250,7 +253,7 @@ export default function MiniDrawer() {
             aria-controls={menuId}
             aria-haspopup="true"
             onClick={handleProfileMenuOpen}
-            color="#788195"
+            className={classes.gris}
           >
             <AccountCircle className={classes.gris} />
           </IconButton>
@@ -274,7 +277,8 @@ export default function MiniDrawer() {
           </IconButton>
         </div>
         <Divider />
-        <List>
+        { tipoUsuario === '1' ? 
+        (<List>
           {list.map((item, index) => (
             <NavLink to={item.route} key={index}>
               <ListItem button key={item.name}>
@@ -285,7 +289,18 @@ export default function MiniDrawer() {
               </ListItem>
             </NavLink>
           ))}
-        </List>
+        </List>) : 
+        (<List>
+            <NavLink to={list[2].route} key={2}>
+              <ListItem button key={list[2].name}>
+                <ListItemIcon className={(classes.botones, classes.gris)}>
+                  {list[2].icon}
+                </ListItemIcon>
+                <ListItemText primary={list[2].name} className={classes.gris} />
+              </ListItem>
+            </NavLink>
+        </List>)
+      }
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbarC} />

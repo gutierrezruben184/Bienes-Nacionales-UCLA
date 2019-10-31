@@ -15,7 +15,6 @@ function Routes() {
         <PrivateRoute component={Menu} path="/menu" />
         <PublicRoute component={Login} path="/" exact/>
         <Route component={NotFound404} />
-        {/* <Redirect from="/menu" exact to="/menu/departamento" /> */}
       </Switch>
     </Router>
   );
