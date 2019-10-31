@@ -36,6 +36,24 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     @POST
+    @Consumes({MediaType.APPLICATION_JSON}
+    @Path(/login/{ced}/{pass})
+    public JWT login(@PathParam("ced") String ced,@PathParam("pass") String pass){
+        Usuario us = super.find(id);
+        String jws = Jwts.builder() // (1)
+            .setSubject("Bob")      // (2) 
+            .signWith('1234')          // (3)
+            .compact();
+        jwt.setToken = '11';
+        jwt.setCedula() = us.getCedula();
+        jwt.setTipo() = us.getTipo();
+        jwt.setNombre() = us.getNombre();
+        jwt.setDepto() = us.getFkUnidadid().getIdunidad();
+        return jwt;
+    }
+
+
+    @POST
     @Override
     @Consumes({MediaType.APPLICATION_JSON})
     public void create(Usuario entity) {
