@@ -65,6 +65,7 @@ export default function SignInSide(props) {
           localStorage.setItem('tipoUsuario', res.data.tipo);
           localStorage.setItem('cedula', res.data.cedula);
           localStorage.setItem('dpto', res.data.depto);
+          //hay que setear el objeto departamentp
           localStorage.setItem('nombre', res.data.depto);
           window.location.href = "/menu";
         },
@@ -78,11 +79,21 @@ export default function SignInSide(props) {
           })
           //solo para probar////////////////////
           localStorage.setItem('token', '123');
-          localStorage.setItem('tipoUsuario','2');
+          localStorage.setItem('tipoUsuario','1');
           localStorage.setItem('cedula', '25147289');
-          localStorage.setItem('dpto', 'investigacion de operaciones');
+          const dpto = {
+            "estatus": "a",
+            "fkDecanatoid":{
+            "direccion": "cerca de metropolis",
+            "estatus": "a",
+            "iddecanato": 12234,
+            "nombre": "dcyt"
+            },
+            "idunidad": 1,
+            "nombre": "hola"}
+          localStorage.setItem('dpto', JSON.stringify(dpto) );
           localStorage.setItem('nombre', 'Ruben');
-           window.location.href = "/menu/decanato";
+           window.location.href = "/menu";
            ///////////////////////
         }
       );

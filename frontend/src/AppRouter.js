@@ -4,6 +4,7 @@ import Decanato from "./components/Decanato";
 import Departamento from "./components/Departamento";
 import Marca from "./components/Marca";
 import Equipo from "./components/Equipo";
+import CantTotalEquipos from "./components/CantTotalEquipos/CanTotalEquipos";
 
 export default class AppRouter extends React.Component {
   render() {
@@ -17,7 +18,8 @@ export default class AppRouter extends React.Component {
             <Route path="/menu/departamento" component={Departamento} />
             <Route path="/menu/marca" component={Marca} />
             <Route path="/menu/equipo" component={Equipo} />
-            <Redirect from="/menu" to="/menu/departamento" />
+            <Route path="/menu/totalequipos" component={CantTotalEquipos} />
+            <Redirect from="/menu" to="/menu/decanato" />
           </React.Fragment>
         ) : (
           // Rutas para el empleado

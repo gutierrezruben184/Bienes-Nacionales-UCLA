@@ -25,8 +25,9 @@ import HomeWorkIcon from "@material-ui/icons/HomeWork";
 import LaptopWindowsIcon from "@material-ui/icons/LaptopWindows";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import RedesSociales from "../components/RedesSociales";
+import Container from '@material-ui/core/Container';
 
-const drawerWidth = 240;
+
 
 const list = [
   {
@@ -58,12 +59,30 @@ const list = [
     route: "/menu/empleados",
     key: 5,
     icon: <PeopleAltIcon />
+  },
+  {
+    name: "Cantidad",
+    route: "/menu/totalequipos",
+    key: 6,
   }
 ];
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex"
+  },
+  toolbar: {
+    backgroundColor: "#102C4D",
+    paddingRight: 24 // keep right padding when drawer closed
+  },
+  toolbarIcon: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
+    ...theme.mixins.toolbar
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -85,53 +104,6 @@ const useStyles = makeStyles(theme => ({
   },
   menuButtonHidden: {
     display: "none"
-  },
-  hide: {
-    display: "none",
-    color: "#788195"
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: "nowrap"
-  },
-  toolbar: {
-    boxShadow: 0,
-    backgroundColor: "#102C4D",
-    paddingRight: 24 // keep right padding when drawer closed
-  },
-  toolbarC: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3)
-  },
-
-  mainTitle: {
-    textAlign: "center",
-    marginTop: "20px"
-  },
-
-  mainTitleH2: {
-    textTransform: "uppercase",
-    color: "#fff",
-    fontSize: "2em",
-    fontWeight: "bold",
-    display: "inline-block",
-    verticalAlign: "middle",
-    lineHeight: "normal"
-  },
-  botones: {
-    color: "#788195",
-    fontWeight: "bold"
-  },
-  gris: {
-    color: "#788195"
   },
   title: {
     flexGrow: 1
@@ -158,14 +130,60 @@ const useStyles = makeStyles(theme => ({
       width: theme.spacing(9)
     }
   },
-  toolbarIcon: {
+  appBarSpacer: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+  },
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+  fixedHeight: {
+    height: 240,
+  },
+
+
+
+
+  toolbarC: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
-    padding: "0 8px",
+    padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar
-  }
+  },
+  
+  mainTitle: {
+    textAlign: "center",
+    marginTop: "20px"
+  },
+
+  mainTitleH2: {
+    textTransform: "uppercase",
+    color: "#fff",
+    fontSize: "2em",
+    fontWeight: "bold",
+    display: "inline-block",
+    verticalAlign: "middle",
+    lineHeight: "normal"
+  },
+  botones: {
+    color: "#788195",
+    fontWeight: "bold"
+  },
+  gris: {
+    color: "#788195"
+  },
 }));
+
 
 export default function MiniDrawer() {
   const classes = useStyles();
@@ -303,9 +321,11 @@ export default function MiniDrawer() {
       }
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.toolbarC} />
+        <div className={classes.appBarSpacer} />
+        <Container maxWidth="lg" className={classes.container}>
         <AppRouter />
-        <RedesSociales />
+        {/*<RedesSociales />*/}
+      </Container>
       </main>
     </div>
   );
