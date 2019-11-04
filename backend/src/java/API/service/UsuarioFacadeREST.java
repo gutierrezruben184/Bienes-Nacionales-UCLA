@@ -19,6 +19,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import util.JWT;
 
 /**
  *
@@ -36,28 +40,27 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     @POST
-    @Consumes({MediaType.APPLICATION_JSON}
-    @Path(/login/{ced}/{pass})
-    public JWT login(@PathParam("ced") String ced,@PathParam("pass") String pass){
-        Usuario us = super.find(id);
-        String jws = Jwts.builder() // (1)
-            .setSubject("Bob")      // (2) 
-            .signWith('1234')          // (3)
-            .compact();
-        jwt.setToken = '11';
-        jwt.setCedula() = us.getCedula();
-        jwt.setTipo() = us.getTipo();
-        jwt.setNombre() = us.getNombre();
-        jwt.setDepto() = us.getFkUnidadid().getIdunidad();
-        return jwt;
-    }
-
-
-    @POST
     @Override
     @Consumes({MediaType.APPLICATION_JSON})
     public void create(Usuario entity) {
         super.create(entity);
+    }
+    
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/login/{ced}/{pass}")
+    public JWT login(@PathParam("ced") String ced,@PathParam("pass") String pass){
+        Usuario us = super.find(ced);
+        JWT jwt = new JWT();
+        String token = Jwts.builder() // (1)
+            .setSubject("Bob")      // (2) 
+            .compact();
+        jwt.setToken(token);
+        jwt.setCedula(us.getCedula());
+        jwt.setTipo(us.getTipo());
+        jwt.setNombre(us.getNombre());
+        jwt.setDepto(us.getFkUnidadid().getIdunidad());
+        return jwt;
     }
 
     @PUT
