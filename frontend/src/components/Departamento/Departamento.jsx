@@ -16,7 +16,7 @@ export default function MaterialTableDemo() {
   async function getDepartamentos(){
     try{
       const response = await axios({
-        url: `http://localhost:52694/backend/webresources/api.departamento`,
+        url: `http://localhost:8080/backend/webresources/api.departamento`,
         method: 'GET'
       })
       return response.data
@@ -28,7 +28,7 @@ export default function MaterialTableDemo() {
   async function postDepartamentos(datos){
     try{
       const response = await axios({
-        url: `http://localhost:52694/backend/webresources/api.departamento`,
+        url: `http://localhost:8080/backend/webresources/api.departamento`,
         method: 'POST',
         data: {
                 nombre: datos.nombre,
@@ -46,7 +46,7 @@ export default function MaterialTableDemo() {
   async function updateDepartamentos(newData, oldData){
     try{
       const response = await axios({
-        url: `http://localhost:52694/backend/webresources/api.departamento/`+oldData.iddepartamento,
+        url: `http://localhost:8080/backend/webresources/api.departamento/`+oldData.iddepartamento,
         method: 'PUT',
         data: {
                 nombre: newData.nombre,
@@ -65,7 +65,7 @@ export default function MaterialTableDemo() {
   async function deleteDepartamentos(id){
     try{
       const response = await axios({
-        url: `http://localhost:52694/backend/webresources/api.departamento/`+id,
+        url: `http://localhost:8080/backend/webresources/api.departamento/`+id,
         method: 'DELETE',
         })
         refresh();
