@@ -157,10 +157,7 @@ export default function Equipo() {
           { title: 'Estado del Equipo', field: 'fkIdestadoequipo.idestadoequipo', 
           lookup: {1: 'activo', 2:'no activo'}}
           ]}
-        data={[
-          {nombre:'prueba'},
-          {nombre:'prueba2'},
-        ]}
+        data={equipos}
         editable={{
           onRowAdd: newData =>
             new Promise(resolve => {
