@@ -1,127 +1,142 @@
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
-import axios from "axios";
+import Swal from 'sweetalert2';
+import API from "../utils/API";
 
-const localhost= '192.168.43.244:8080'
-
-
-export default function MaterialTableDemo() {
-  const [state, setState] = React.useState([]);
-
-
-  async function refresh() {
-    const response = await getDecanatos()
-   
-      console.log(response)
-      //return response
-      setState(response)
-  }
-
-  async function getDecanatos(){
-    try{
-      const response = await axios({
-        url: `http://${localhost}/backend/webresources/api.decanato`,
-        method: 'GET'
-      })
-      return response.data
-      } catch(e){
-        console.log(e)
-    }
-  }
-
-  async function postDecanatos(datos){
-    try{
-      const response = await axios({
-        url: `http://${localhost}/backend/webresources/api.decanato`,
-        method: 'POST',
-        data: {
-                nombre: datos.nombre,
-                direccion: datos.direccion,
-                estatus: datos.estatus          
-              }
-      })
-      refresh();
-      alert("guardo con exito");
-      return response.data
-      } catch(e){
-        console.log(e)
-        alert("error al guardar");
-
-    }
-  }
-
-  async function updateDecanatos(newData, oldData){
-    try{
-      const response = await axios({
-        url: `http://${localhost}/backend/webresources/api.decanato/`+oldData.iddecanato,
-        method: 'PUT',
-        data: {
-                nombre: newData.nombre,
-                direccion: newData.direccion,
-                estatus: newData.estatus,
-                iddecanato  : newData.iddecanato     
-              },
-        
-      })
-            alert("exito al modificar");
-
-      refresh();
-      return response.data
-      } catch(e){
-        console.log(e);
-        alert("error al modificar");
-    }
-  }
-
-  async function deleteDecanatos(id){
-    try{
-      const response = await axios({
-        url: `http://${localhost}/backend/webresources/api.decanato/`+id,
-        method: 'DELETE',
-        })
-        refresh();
-        alert("exito al eliminar");
-        return response.data
-      } catch(e){
-        console.log(e);
-        alert("error al eliminar");
-    }
-  }
+export default function Decanato() {
+  const [decanatos, setDecanatos] = useState([]); //Setiamos con Set y la data de decanatos se guarda en la variable "decanatos"
 
   useEffect(() => {
-    async function loadDecanatos () {
-      const response = await getDecanatos()
-     
-        console.log(response)
-        //return response
-        setState(response)
-    }
-    loadDecanatos()
+    getDecanatos()
   }, []);
 
+  //Funcion que refresca la tabla con los nuevos datos
+  async function refresh() {
+    await getDecanatos()
+  }
 
+  //Petición a la Api Rest para los decanatos guardados
+  async function getDecanatos(){
+    await API.get("/api.decanato")
+      .then(
+      res => {
+        setDecanatos(res.data)
+      })
+      .catch(e => {
+        console.log("error" + e);
+      })
+  }
+
+  //Funcion para guardar nuevos decanatos
+  async function postDecanatos(datos){
+    await API.post("/api.decanato",
+    {
+      nombre: datos.nombre,
+      direccion: datos.direccion,
+      estatus: datos.estatus 
+    }
+    )
+    .then(res => {
+        Swal.fire(
+        'Listo!',
+        'Decanato Agregado con Exito!',
+        'success'
+      )
+        refresh()
+      })
+      .catch(error => {
+        console.log(error)
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Algo salió mal!',
+        })
+      })
+  }
+
+  //Funcion para actualizar un decanato
+  async function updateDecanatos(newData, oldData){
+    await API.put("/api.decanato/"+oldData.iddecanato,
+    {
+      nombre: newData.nombre,
+      direccion: newData.direccion,
+      estatus: newData.estatus,
+      iddecanato  : newData.iddecanato  
+    })
+    .then(res => {
+        Swal.fire(
+        'Listo!',
+        'Decanato modificado con Exito!',
+        'success'
+        )
+        refresh()
+      })
+      .catch(error => {
+        console.log(error)
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Algo salió mal!',
+        })
+      })
+  }
+
+  //funcion para eliminar un decanato
+  async function deleteDecanatos(id){
+    await API.delete("/api.decanato/"+id,)
+    .then(res => {
+        Swal.fire(
+        'Listo!',
+        'Decanato Eliminado con Exito!',
+        'success'
+      )
+        refresh()
+      })
+      .catch(error => {
+        console.log(error)
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Algo salió mal!',
+        })
+      })
+  }
 
   return (
-  
     <MaterialTable
       title="Lista de Decanatos"
+      //Con localization se le cambia el lenguaje o a los mensajes especificos de la plantilla
+      localization = {{
+        header:{
+          actions: "Acciones"
+        },
+        body: {
+          addTooltip:"Agregar Decanato",
+          deleteTooltip:"Eliminar Decanato",
+          editTooltip:"Editar Decanato",
+            editRow: {
+              deleteText: '¿Desea eliminar el Decanato?',
+              cancelTooltip: 'Cancelar',
+              saveTooltip:'Guardar'
+          },
+        },
+        toolbar:{
+          searchPlaceholder: 'Buscar'
+        }
+      }}
       columns = {[
         { title: 'Nombre', field: 'nombre' },
         { title: 'Dirección', field: 'direccion' },
         { title: 'Estatus', field: 'estatus', lookup: {A:"Activo",I:"Inactivo"}},
       ]}
-      data={state}
+      data={decanatos} //Aqui es donde se cargan los datos del Get en la tabla
       editable={{
         onRowAdd: newData =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              console.log(newData);
-              postDecanatos(newData);
-              /* const data = [...state];
-              data.push(newData);
-              console.log(newData);
-              setState({ ...state, data }); */
+              console.log("Decanato Guardado: " + newData);
+              postDecanatos(newData);              
             }, 600);
           }),
         onRowUpdate: (newData, oldData) =>
@@ -129,26 +144,19 @@ export default function MaterialTableDemo() {
             setTimeout(() => {
               resolve();
               console.log(oldData);
-              console.log(newData);
+              console.log("Decanato Actualizado: " + newData);
               updateDecanatos(newData, oldData)
-              /* const data = [...state.data];
-              data[data.indexOf(oldData)] = newData;
-              setState({ ...state, data }); */
             }, 600);
           }),
         onRowDelete: oldData =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              console.log(oldData)
+              console.log("Decanato Eliminado" + oldData)
               deleteDecanatos(oldData.iddecanato);
-              /* const data = [...state.data];
-              data.splice(data.indexOf(oldData), 1);
-              setState({ ...state, data }); */
             }, 600);
           }),
       }}
     />
-
   );
 }
