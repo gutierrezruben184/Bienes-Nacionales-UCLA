@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import axios from "axios";
 
+const localhost= 'localhost:8080'
+
+
 export default function MaterialTableDemo() {
   const [state, setState] = React.useState([]);
 
@@ -17,7 +20,7 @@ export default function MaterialTableDemo() {
   async function getDecanatos(){
     try{
       const response = await axios({
-        url: `http://localhost:52694/backend/webresources/api.decanato`,
+        url: `http://${localhost}/backend/webresources/api.decanato`,
         method: 'GET'
       })
       return response.data
@@ -29,7 +32,7 @@ export default function MaterialTableDemo() {
   async function postDecanatos(datos){
     try{
       const response = await axios({
-        url: `http://localhost:52694/backend/webresources/api.decanato`,
+        url: `http://${localhost}/backend/webresources/api.decanato`,
         method: 'POST',
         data: {
                 nombre: datos.nombre,
@@ -38,41 +41,50 @@ export default function MaterialTableDemo() {
               }
       })
       refresh();
+      alert("guardo con exito");
       return response.data
       } catch(e){
         console.log(e)
+        alert("error al guardar");
+
     }
   }
 
   async function updateDecanatos(newData, oldData){
     try{
       const response = await axios({
-        url: `http://localhost:52694/backend/webresources/api.decanato/`+oldData.iddecanato,
+        url: `http://${localhost}/backend/webresources/api.decanato/`+oldData.iddecanato,
         method: 'PUT',
         data: {
                 nombre: newData.nombre,
                 direccion: newData.direccion,
                 estatus: newData.estatus,
                 iddecanato  : newData.iddecanato     
-              }
+              },
+        
       })
+            alert("exito al modificar");
+
       refresh();
       return response.data
       } catch(e){
-        console.log(e)
+        console.log(e);
+        alert("error al modificar");
     }
   }
 
   async function deleteDecanatos(id){
     try{
       const response = await axios({
-        url: `http://localhost:52694/backend/webresources/api.decanato/`+id,
+        url: `http://${localhost}/backend/webresources/api.decanato/`+id,
         method: 'DELETE',
         })
         refresh();
+        alert("exito al eliminar");
         return response.data
       } catch(e){
-        console.log(e)
+        console.log(e);
+        alert("error al eliminar");
     }
   }
 
@@ -90,6 +102,7 @@ export default function MaterialTableDemo() {
 
 
   return (
+  
     <MaterialTable
       title="Lista de Decanatos"
       columns = {[
@@ -136,5 +149,6 @@ export default function MaterialTableDemo() {
           }),
       }}
     />
+
   );
 }
