@@ -3,11 +3,11 @@ import MaterialTable from 'material-table';
 import API from "../utils/API";
 import Swal from 'sweetalert2';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-
+import ReporteSolicitud from './ReporteSolicitud';
 
 const lookupMarcas = (marcas) => {
   let lookup = {}
-  marcas.map((marca,i) => 
+  marcas.map((marca) => 
     (
   lookup[marca.idmarca] = marca.nombre
   ))
@@ -141,55 +141,55 @@ export default function Equipo() {
   
 
   return (
-    <MaterialTable
-      title="Lista de Equipos"
-      localization = {{
-        body: {
-            editRow: {
-              deleteText: '¿Seguro que quieres borrar?'
+    <div>
+      <MaterialTable
+        title="Lista de Equipos"
+        localization = {{
+          body: {
+              editRow: {
+                deleteText: '¿Seguro que quieres borrar?'
+            }
           }
-        }
-      }}
-      columns={[
-        { title: 'Nombre', field: 'nombre' },
-        { title: 'Marca', field: 'fkIdmarca.idmarca', lookup: lookupMarcas(marcas) },
-        { title: 'Estado del Equipo', field: 'fkIdestadoequipo.idestadoequipo', 
-        lookup: {1: 'activo', 2:'no activo'}}
+        }}
+        columns={[
+          { title: 'Nombre', field: 'nombre' },
+          { title: 'Marca', field: 'fkIdmarca.idmarca', lookup: lookupMarcas(marcas) },
+          { title: 'Estado del Equipo', field: 'fkIdestadoequipo.idestadoequipo', 
+          lookup: {1: 'activo', 2:'no activo'}}
+          ]}
+        data={equipos}
+        editable={{
+          onRowAdd: newData =>
+            new Promise(resolve => {
+              setTimeout(() => {
+                resolve();
+                addEquipo(newData)
+              }, 600);
+            }),
+          onRowUpdate: (newData, oldData) =>
+            new Promise(resolve => {
+              setTimeout(() => {
+                resolve();
+                updateEquipos(newData, oldData)
+              }, 600);
+            }),
+          onRowDelete: oldData =>
+            new Promise(resolve => {
+              setTimeout(() => {
+                resolve();
+                DeleteEquipos(oldData.idequipo)
+              }, 600);
+            }),
+        }}
+        actions={[
+          {
+            icon: () => <AssignmentIcon/>,
+            tooltip: 'Generar reporte',
+            onClick: (event, rowData)  => alert("Dialog para el formulario " + rowData.name)
+          }
         ]}
-      data={[
-        {nombre:'prueba'},
-        {nombre:'prueba2'},
-      ]}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              addEquipo(newData)
-            }, 600);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              updateEquipos(newData, oldData)
-            }, 600);
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              DeleteEquipos(oldData.idequipo)
-            }, 600);
-          }),
-      }}
-      actions={[
-        {
-          icon: () => <AssignmentIcon/>,
-          tooltip: 'Generar reporte',
-          onClick: (event, rowData)  => alert("Dialog para el formulario " + rowData.name)
-        }
-      ]}
-    />
+      />
+      <ReporteSolicitud />
+    </div>
   );
 }
