@@ -1,113 +1,167 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
-import axios from "axios";
-
-const localhost= '192.168.43.244:8080'
+import API from "../utils/API";
+import Swal from 'sweetalert2';
 
 
 export default function MaterialTableDemo() {
   const [state, setState] = React.useState([]);
+  const [decanatos, setDecanato] = useState([]);
+  const [departamentos, setDepartamentos] = useState([]);
+
+  const lookupDecanatos = (decanatos) => {
+    let lookup = {}
+    decanatos.map((decanato) => {
+      lookup[decanato.iddecanato] = decanato.nombre
+    })
+    return lookup
+  }
 
   async function refresh() {
-    const response = await getDepartamentos()
-   
-      console.log(response)
-      //return response
-      setState(response)
+    await getDepartamentos()
   }
 
   async function getDepartamentos(){
-    try{
-      const response = await axios({
-        url: `http://${localhost}/backend/webresources/api.departamento`,
-        method: 'GET'
+    await API.get("/api.departamento")
+      .then(
+      res => {
+        setDepartamentos(res.data)
       })
-      return response.data
-      } catch(e){
-        console.log(e)
-    }
+      .catch(e => {
+        console.log("error" + e);
+      })
   }
 
-  async function postDepartamentos(datos){
-    try{
-      const response = await axios({
-        url: `http://${localhost}/backend/webresources/api.departamento`,
-        method: 'POST',
-        data: {
-                nombre: datos.nombre,
-                idUnidad: datos.fk_decanatoid,
-                estatus: datos.estatus          
-              }
+  async function getDecanatos(){
+    await API.get("/api.decanato")
+      .then(
+      res => {
+        console.log(res.data)
+        setDecanato(res.data)
+        lookupDecanatos(res.data)
       })
-      refresh();
-      return response.data
-      } catch(e){
-        console.log(e)
-    }
+      .catch(e => {
+        console.log("error" + e);
+      })
+  }
+
+  useEffect(() => {
+    getDepartamentos()
+    getDecanatos()
+  }, []);
+
+  async function postDepartamentos(datos){
+      await API.post("/api.departamento",
+        {
+          nombre: datos.nombre,
+          fkDecanatoid: decanatos.find( decanato => decanato.iddecanato == datos.fkDecanatoid.iddecanato ),
+          estatus: datos.estatus,          
+        }
+      )
+      .then(res => {
+        Swal.fire(
+        'Listo!',
+        'Departamento Agregado con Exito!',
+        'success'
+      )
+        refresh()
+      }).catch(error => {
+        console.log(error)
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Algo salió mal!',
+        })
+      })
   }
 
   async function updateDepartamentos(newData, oldData){
-    try{
-      const response = await axios({
-        url: `http://${localhost}/backend/webresources/api.departamento/`+oldData.iddepartamento,
-        method: 'PUT',
-        data: {
-                nombre: newData.nombre,
-                decanato: newData.fk_decanatoid,
-                estatus: newData.estatus,
-                iddepartamento  : newData.iddepartamento     
-              }
+      await API.put("/api.departamento/"+oldData.idunidad,
+        {
+          nombre: newData.nombre,
+          fkDecanatoid: newData.fkDecanatoid,
+          estatus: newData.estatus,
+          idunidad  : newData.idunidad     
+        }
+      ).then(res => {
+        Swal.fire(
+        'Listo!',
+        'Departamento Modificado con Exito!',
+        'success'
+      )
+        refresh()
       })
-      refresh();
-      return response.data
-      } catch(e){
-        console.log(e)
-    }
+      .catch(error => {
+        console.log(error)
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Algo salió mal!',
+        })
+      })
   }
 
   async function deleteDepartamentos(id){
-    try{
-      const response = await axios({
-        url: `http://${localhost}/backend/webresources/api.departamento/`+id,
-        method: 'DELETE',
+    await API.delete("/api.departamento/"+id,)
+      .then(res => {
+        Swal.fire(
+        'Listo!',
+        'Departamento Eliminado con Exito!',
+        'success'
+        )
+        refresh()
+      })
+      .catch(error => {
+        console.log(error)
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Algo salió mal!',
         })
-        refresh();
-        return response.data
-      } catch(e){
-        console.log(e)
-    }
+      })
   }
 
   useEffect(() => {
     async function loadDepartamentos () {
       const response = await getDepartamentos()
-     
-        console.log(response)
-        //return response
         setState(response)
     }
     loadDepartamentos()
   }, []);
 
-
   return (
     <MaterialTable
       title="Lista de Departamentos"
+      localization = {{
+        header:{
+          actions: "Acciones"
+        },
+        body: {
+          addTooltip:"Agregar Departamento",
+          deleteTooltip:"Eliminar Departamento",
+          editTooltip:"Editar Departamento",
+            editRow: {
+              deleteText: '¿Desea eliminar el Departamento?',
+              cancelTooltip: 'Cancelar',
+              saveTooltip:'Guardar'
+          },
+        },
+        toolbar:{
+          searchPlaceholder: 'Buscar'
+        }
+      }}
       columns={[
         { title: 'Nombre', field: 'nombre' },
-        { title: 'Decanato', field: 'fk_decanatoid' },
+        { title: 'Decanato', field: 'fkDecanatoid.iddecanato', lookup: lookupDecanatos(decanatos) },
         { title: 'Estatus', field: 'estatus', lookup: {A:"Activo",I:"Inactivo"} }
         ]}
-      data={state}
+        data={departamentos}
       editable={{
         onRowAdd: newData =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
               postDepartamentos(newData);
-              // const data = [...state.data];
-              // data.push(newData);
-              // setState({ ...state, data });
             }, 600);
           }),
         onRowUpdate: (newData, oldData) =>
@@ -115,19 +169,13 @@ export default function MaterialTableDemo() {
             setTimeout(() => {
               resolve();
               updateDepartamentos(newData, oldData)
-              // const data = [...state.data];
-              // data[data.indexOf(oldData)] = newData;
-              // setState({ ...state, data });
             }, 600);
           }),
         onRowDelete: oldData =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              deleteDepartamentos(oldData.iddepartamento);
-              // const data = [...state.data];
-              // data.splice(data.indexOf(oldData), 1);
-              // setState({ ...state, data });
+              deleteDepartamentos(oldData.idunidad);
             }, 600);
           }),
       }}
