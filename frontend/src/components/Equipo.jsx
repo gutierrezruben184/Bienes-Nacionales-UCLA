@@ -11,22 +11,21 @@ const lookupMarcas = (marcas) => {
     (
   lookup[marca.idmarca] = marca.nombre
   ))
-  // console.log(lookup)
   return lookup
 }
 
 export default function Equipo() {
   const [equipos, setEquipos] = useState([]);
   const [marcas, setMarcas] = useState([]);
+  const usu = JSON.parse(localStorage.getItem('usuario'))
 
 
   async function getEquipos(){
-    await API.get("/api.equipo")
+    await API.get(`/api.equipo/dec/${usu.fkIddepartamento.iddepartamento}`)
       .then(
       res => {
         console.log(res.data)
         setEquipos(res.data)
-        // lookupMarcas(res.data.fkIdmarca)
       })
       .catch(e => {
         console.log("error" + e);
@@ -39,7 +38,6 @@ export default function Equipo() {
       res => {
         console.log(res.data)
         setMarcas(res.data)
-        // lookupMarcas(res.data)
       })
       .catch(e => {
         console.log("error" + e);
@@ -59,10 +57,10 @@ export default function Equipo() {
   async function addEquipo(newData){
     await API.post("/api.equipo",
     {
-        fkIddepartamento: JSON.parse(localStorage.getItem('dpto')),
+        fkIddepartamento: usu.fkIddepartamento,
         fkIdestadoequipo: {
           idestadoequipo: newData.fkIdestadoequipo.idestadoequipo,
-          tipo: newData.fkIdestadoequipo.idestadoequipo == "1" ? "activo" : "inactivo" //cambiar
+          tipo: newData.fkIdestadoequipo.idestadoequipo == "1" ? "bueno" : "malo" //cambiar
         }, 
         fkIdmarca:  marcas.find( marca => marca.idmarca == newData.fkIdmarca.idmarca ),
         nombre: newData.nombre,
@@ -89,10 +87,10 @@ export default function Equipo() {
   async function updateEquipos(newData, oldData){
     await API.put("/api.equipo/"+newData.idequipo,
     {
-        fkIddepartamento: newData.fkIddepartamento,
+        fkIddepartamento: usu.fkIddepartamento,
         fkIdestadoequipo: {
           idestadoequipo: newData.fkIdestadoequipo.idestadoequipo,
-          tipo: newData.fkIdestadoequipo.idestadoequipo == "1" ? "activo" : "inactivo" //cambiar
+          tipo: newData.fkIdestadoequipo.idestadoequipo == "1" ? "bueno" : "malo" 
         }, 
         fkIdmarca: marcas.find( marca => marca.idmarca == newData.fkIdmarca.idmarca ),
         nombre: newData.nombre,
@@ -155,7 +153,7 @@ export default function Equipo() {
           { title: 'Nombre', field: 'nombre' },
           { title: 'Marca', field: 'fkIdmarca.idmarca', lookup: lookupMarcas(marcas) },
           { title: 'Estado del Equipo', field: 'fkIdestadoequipo.idestadoequipo', 
-          lookup: {1: 'activo', 2:'no activo'}}
+          lookup: {1: 'bueno', 2:'malo'}}
           ]}
         data={equipos}
         editable={{
@@ -188,38 +186,6 @@ export default function Equipo() {
             onClick: (event, rowData)  => alert("Dialog para el formulario " + rowData.name)
           }
         ]}
-      data={equipos}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              addEquipo(newData)
-            }, 600);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              updateEquipos(newData, oldData)
-            }, 600);
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              DeleteEquipos(oldData.idequipo)
-            }, 600);
-          }),
-      }}
-      actions={[
-        {
-          icon: () => <AssignmentIcon/>,
-          tooltip: 'Generar reporte',
-          onClick: (event, rowData)  => alert("Dialog para el formulario " + rowData.name)
-        }
-      ]}
-    />
       />
       <ReporteSolicitud />
     </div>

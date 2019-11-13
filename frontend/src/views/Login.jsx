@@ -60,14 +60,19 @@ export default function SignInSide(props) {
     await API.post(`/api.usuario/login/${values.cedula}/${values.contrasenna}`)
       .then(
         res => {
-          console.log(res);
-          localStorage.setItem('token', res.data.token);
-          localStorage.setItem('tipoUsuario', res.data.tipo);
-          localStorage.setItem('cedula', res.data.cedula);
-          localStorage.setItem('dpto', res.data.depto);
-          //hay que setear el objeto departamentp
-          localStorage.setItem('nombre', res.data.depto);
-          window.location.href = "/menu";
+          console.log(res.data)
+          if(res.data.type === "success"){
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('usuario', JSON.stringify(res.data.us))
+            window.location.href = "/menu"
+          }          
+          else{
+            Swal.fire({
+            type: 'error',
+            title: 'Usuario no encontrado',
+            text: 'Usuario o contraseña inválidas, por favor verifique los datos y vuelva a intentar',
+            })
+          }
         },
         error => {
           console.log(error);
@@ -78,22 +83,22 @@ export default function SignInSide(props) {
             text: 'Por favor verique los datos y vuelva a intentar',
           })
           //solo para probar////////////////////
-          localStorage.setItem('token', '123');
-          localStorage.setItem('tipoUsuario','1');
-          localStorage.setItem('cedula', '25147289');
-          const dpto = {
-            "estatus": "a",
-            "fkDecanatoid":{
-            "direccion": "cerca de metropolis",
-            "estatus": "a",
-            "iddecanato": 12234,
-            "nombre": "dcyt"
-            },
-            "idunidad": 1,
-            "nombre": "hola"}
-          localStorage.setItem('dpto', JSON.stringify(dpto) );
-          localStorage.setItem('nombre', 'Ruben');
-           window.location.href = "/menu";
+          // localStorage.setItem('token', '123');
+          // localStorage.setItem('tipoUsuario','1');
+          // localStorage.setItem('cedula', '25147289');
+          // const dpto = {
+          //   "estatus": "a",
+          //   "fkDecanatoid":{
+          //   "direccion": "cerca de metropolis",
+          //   "estatus": "a",
+          //   "iddecanato": 12234,
+          //   "nombre": "dcyt"
+          //   },
+          //   "idunidad": 1,
+          //   "nombre": "hola"}
+          // localStorage.setItem('dpto', JSON.stringify(dpto) );
+          // localStorage.setItem('nombre', 'Ruben');
+          //  window.location.href = "/menu";
            ///////////////////////
         }
       );

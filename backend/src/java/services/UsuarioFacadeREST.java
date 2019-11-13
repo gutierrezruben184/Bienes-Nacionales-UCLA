@@ -101,13 +101,28 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         //fata validar
         Usuario us = super.find(id);
         JWT jwt = new JWT();
-        String token = Jwts.builder() // (1)
-            .setSubject("Bob")      // (2) 
-            .compact();
-        jwt.setUs(us);
-        jwt.setMessage("error");
-        jwt.setType("succes");
-        jwt.setToken(token);
+        if(us != null){
+            //verifica que encontro un usuario
+            if (us.getContrasenna().equals(pass)){
+                //verifica si la contrasenna tipeada es la misma
+                String token = Jwts.builder() // (1)
+                    .setSubject("Bob")      // (2) 
+                    .compact();
+                jwt.setUs(us);    
+                jwt.setMessage("encontrado");
+                jwt.setType("success");
+                jwt.setToken(token);
+            }
+            else{
+              jwt.setMessage("usuario no encontrado");
+              jwt.setType("error");  
+            }
+        }
+        else{
+            jwt.setMessage("usuario no encontrado");
+            jwt.setType("error");
+        }
+        
         return jwt;
     }
     

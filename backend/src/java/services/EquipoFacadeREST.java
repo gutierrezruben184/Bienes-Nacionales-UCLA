@@ -88,4 +88,10 @@ public class EquipoFacadeREST extends AbstractFacade<Equipo> {
         return em;
     }
     
+    @GET
+    @Path("/dec/{depid}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Equipo> getEquipo(@PathParam("depid") Integer depid) {
+        return em.createNamedQuery("Equipo.findByIddepartamento").setParameter("iddep",depid).getResultList();
+    }
 }
