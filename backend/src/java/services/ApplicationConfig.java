@@ -36,6 +36,7 @@ public class ApplicationConfig extends Application {
         resources.add(services.MarcaFacadeREST.class);
         resources.add(services.ReporteSolicitudFacadeREST.class);
         resources.add(services.UsuarioFacadeREST.class);
+        resources.add(services.corsFilter.class);
     }
     
 }

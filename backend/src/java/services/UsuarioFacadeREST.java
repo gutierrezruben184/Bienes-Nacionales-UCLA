@@ -42,14 +42,14 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
 
     @POST
     @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void create(Usuario entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") String id, Usuario entity) {
         super.edit(entity);
     }
@@ -62,21 +62,21 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Usuario find(@PathParam("id") String id) {
         return super.find(id);
     }
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Usuario> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Usuario> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
@@ -95,18 +95,19 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path("/login/{ced}/{pass}")
-    public JWT login(@PathParam("ced") String ced,@PathParam("pass") String pass){
-        Usuario us = super.find(ced);
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/login/{id}/{pass}")
+    public JWT login(@PathParam("id") String id,@PathParam("pass") String pass){
+        //fata validar
+        Usuario us = super.find(id);
         JWT jwt = new JWT();
         String token = Jwts.builder() // (1)
             .setSubject("Bob")      // (2) 
             .compact();
+        jwt.setUs(us);
+        jwt.setMessage("error");
+        jwt.setType("succes");
         jwt.setToken(token);
-        jwt.setCedula(us.getCedula());
-        jwt.setTipo(us.getTipo());
-        jwt.setNombre(us.getNombre());
-        jwt.setDepto(us.getFkIddepartamento().getIddepartamento());
         return jwt;
     }
     
