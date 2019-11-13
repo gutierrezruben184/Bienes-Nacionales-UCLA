@@ -64,7 +64,13 @@ const list = [
     name: "Cantidad",
     route: "/menu/totalequipos",
     key: 6,
-  }
+  },
+  {
+    name: "Usuarios",
+    route: "/menu/usuario",
+    key: 7,
+    icon: <PeopleAltIcon />
+  },
 ];
 
 const drawerWidth = 240;
