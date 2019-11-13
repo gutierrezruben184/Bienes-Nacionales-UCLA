@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Decanato.findByIddecanato", query = "SELECT d FROM Decanato d WHERE d.iddecanato = :iddecanato")
     , @NamedQuery(name = "Decanato.findByNombre", query = "SELECT d FROM Decanato d WHERE d.nombre = :nombre")
     , @NamedQuery(name = "Decanato.findByDireccion", query = "SELECT d FROM Decanato d WHERE d.direccion = :direccion")
-    , @NamedQuery(name = "Decanato.findByEstatus", query = "SELECT d FROM Decanato d WHERE d.estatus = :estatus")})
+    , @NamedQuery(name = "Decanato.findByEstatus", query = "SELECT d FROM Decanato d WHERE d.estatus = :estatus")
+})
 public class Decanato implements Serializable {
 
     private static final long serialVersionUID = 1L;

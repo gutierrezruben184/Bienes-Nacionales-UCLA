@@ -24,7 +24,7 @@ export default function Equipo() {
     await API.get("/api.equipo")
       .then(
       res => {
-        // console.log(res.data)
+        console.log(res.data)
         setEquipos(res.data)
         // lookupMarcas(res.data.fkIdmarca)
       })
@@ -156,10 +156,7 @@ export default function Equipo() {
         { title: 'Estado del Equipo', field: 'fkIdestadoequipo.idestadoequipo', 
         lookup: {1: 'activo', 2:'no activo'}}
         ]}
-      data={[
-        {nombre:'prueba'},
-        {nombre:'prueba2'},
-      ]}
+      data={equipos}
       editable={{
         onRowAdd: newData =>
           new Promise(resolve => {

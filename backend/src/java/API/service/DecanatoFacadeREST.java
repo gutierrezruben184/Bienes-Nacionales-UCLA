@@ -6,6 +6,7 @@
 package API.service;
 
 import API.Decanato;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -19,6 +20,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import util.TotalDecanato;
+import util.Conexion;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import util.TotalDepartamento;
 
 /**
  *
@@ -87,5 +98,69 @@ public class DecanatoFacadeREST extends AbstractFacade<Decanato> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
+    @GET
+    @Path("estadistica")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<TotalDecanato> listado() {
+        //Declaraciones
+        TotalDecanato totalDec;
+        TotalDepartamento totalDep;
+        List<TotalDecanato> listTotalDec = new ArrayList<TotalDecanato>();
+        
+        int total = 0;
+        int buenos = 0;
+        int malos = 0; 
+        int enReparacion = 0;
+        
+        //fuckin persistente >:v
+        Connection con = Conexion.Conectar();
+        PreparedStatement p;
+        ResultSet rs;
+        //Me traigo todos los decanatos para recorerlos
+        List<Decanato> listDec = em.createQuery("SELECT d FROM Decanato d").getResultList();
+        try {
+
+            //Crea la funcion para los totales de los departamentos
+            
+
+            //Por cada decanato ejecuta la funcion
+            for (Decanato decanato : listDec ){
+                p = con.prepareStatement("select * from estadistica("+ decanato.getIddecanato() +")");
+                rs = p.executeQuery();
+                total = 0;
+                buenos = 0;
+                malos = 0;
+                enReparacion = 0;
+                List<TotalDepartamento> lisTotalDep = new ArrayList<TotalDepartamento>();
+                while(rs.next()){
+                    totalDep  = new TotalDepartamento();
+                    totalDep.setIdDepartamento(rs.getInt(1));
+                    totalDep.setNombreDepartamento(rs.getString(2));
+                    totalDep.setTotal(rs.getInt(3));
+                    totalDep.setBuenos(rs.getInt(4));
+                    totalDep.setMalos(rs.getInt(5));
+                    totalDep.setEnReparacion(rs.getInt(6));
+                    total += totalDep.getTotal();
+                    buenos += totalDep.getBuenos();
+                    malos += totalDep.getMalos();
+                    enReparacion += totalDep.getEnReparacion();
+                    lisTotalDep.add(totalDep);
+                }
+                totalDec = new TotalDecanato();
+                totalDec.setIdDecanato(decanato.getIddecanato());
+                totalDec.setNombreDecanato(decanato.getNombre());
+                totalDec.setTotal(total);
+                totalDec.setBuenos(buenos);
+                totalDec.setMalos(malos);
+                totalDec.setEnReparacion(enReparacion);
+                totalDec.setTd(lisTotalDep);
+                listTotalDec.add(totalDec);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DecanatoFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listTotalDec;
+    }
+
 }

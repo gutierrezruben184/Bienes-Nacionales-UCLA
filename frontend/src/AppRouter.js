@@ -19,7 +19,6 @@ export default class AppRouter extends React.Component {
             <Route path="/menu/marca" component={Marca} />
             <Route path="/menu/equipo" component={Equipo} />
             <Route path="/menu/totalequipos" component={CantTotalEquipos} />
-            <Redirect from="/menu" to="/menu/decanato" />
           </React.Fragment>
         ) : (
           // Rutas para el empleado
