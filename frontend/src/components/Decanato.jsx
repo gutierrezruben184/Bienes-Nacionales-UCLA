@@ -121,13 +121,13 @@ export default function Decanato() {
           },
         },
         toolbar:{
-          searchPlaceholder: 'Buscar'
+          searchPlaceholder: 'Buscar Decanato'
         }
       }}
       columns = {[
         { title: 'Nombre', field: 'nombre' },
         { title: 'Dirección', field: 'direccion' },
-        { title: 'Estatus', field: 'estatus', lookup: {A:"Activo",I:"Inactivo"}},
+        { title: 'Estatus', field: 'estatus', lookup: {a:"Activo",i:"Inactivo"}},
       ]}
       data={decanatos} //Aqui es donde se cargan los datos del Get en la tabla
       editable={{
