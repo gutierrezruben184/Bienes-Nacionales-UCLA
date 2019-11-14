@@ -122,7 +122,7 @@ const EnhancedTableToolbar = props => {
   return (
     <Toolbar>
       <Typography className={classes.title} variant="h6" id="tableTitle">
-        Lista de Decanato
+        Lista de Departamentos
       </Typography>
     </Toolbar>
   );
@@ -135,17 +135,17 @@ EnhancedTableToolbar.propTypes = {
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%",
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(2)
   },
   paper: {
     width: "100%",
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(1)
   },
   table: {
     minWidth: 750
   },
   tableWrapper: {
-    overflowX: "none"
+    overflowX: "default"
   },
   visuallyHidden: {
     border: 0,

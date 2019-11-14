@@ -15,100 +15,14 @@ const useStyles = makeStyles(theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
+    color: '#564BC0',
+    flexGrow: 1
   },
-  expPane:{
-    backgroundColor: '#3f51b5'
-  }
 }));
 
 export default function CantTotalEquipos() {
   const classes = useStyles();
-  const [estadistica, setEstadistica] = useState([
-    {
-      buenos:0,
-      enReparacion:0,
-      idDecanato:2,
-      malos:0,
-      nombreDecanato:"DECANATO DE CIENCIAS ECONOMICAS",
-      td:[
-        {
-          buenos:3,
-          enReparacion:2,
-          idDepartamento:123,
-          malos:0,
-          nombreDepartamento:"z",
-          total:5
-       },
-      ],
-      total:0,
-    },
-    {
-      buenos:6,
-      enReparacion:1,
-      idDecanato:12234,
-      malos:1,
-      nombreDecanato:"DECANATO DE CIENCIAS Y TECNOLOGIA",
-      td:[
-         {
-            buenos:0,
-            enReparacion:0,
-            idDepartamento:123,
-            malos:0,
-            nombreDepartamento:"z",
-            total:0
-         },
-         {
-            buenos:0,
-            enReparacion:0,
-            idDepartamento:1,
-            malos:0,
-            nombreDepartamento:"hola",
-            total:0
-         },
-         {
-            buenos:0,
-            enReparacion:0,
-            idDepartamento:2,
-            malos:0,
-            nombreDepartamento:"x",
-            total:0
-         },
-         {
-            buenos:3,
-            enReparacion:1,
-            idDepartamento:3,
-            malos:1,
-            nombreDepartamento:"y",
-            total:4
-         },
-         {
-            buenos:0,
-            enReparacion:0,
-            idDepartamento:4,
-            malos:0,
-            nombreDepartamento:"hola",
-            total:0
-         },
-         {
-            buenos:0,
-            enReparacion:0,
-            idDepartamento:5,
-            malos:0,
-            nombreDepartamento:"hola",
-            total:0
-         },
-         {
-            buenos:3,
-            enReparacion:0,
-            idDepartamento:6,
-            malos:0,
-            nombreDepartamento:"webo",
-            total:3
-         }
-      ],
-      total:7
-   },
-  ]);
+  const [estadistica, setEstadistica] = useState([]);
 
 
   async function getEstadisticas(){
@@ -135,11 +49,12 @@ export default function CantTotalEquipos() {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          className={classes.expPane}
         >
-          <Typography className={classes.heading} key={i} color='default' >
-          {`${data.nombreDecanato} TOTAL:${data.total}  
-              BUENOS:${data.buenos} MALOS:${data.buenos} En REPARACION:${data.enReparacion}`}
+          <Typography className={classes.heading}  >
+          {`${data.nombreDecanato}`}
+          </Typography>
+          <Typography variant="button" display="block" gutterBottom  >
+          {` TOTAL:${data.total} | BUENOS:${data.buenos} | MALOS:${data.malos} | En REPARACION:${data.enReparacion}`}
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>

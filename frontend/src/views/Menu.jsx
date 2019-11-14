@@ -64,6 +64,7 @@ const list = [
     name: "Cantidad",
     route: "/menu/totalequipos",
     key: 6,
+    icon: <PeopleAltIcon />
   },
   {
     name: "Usuarios",
@@ -194,10 +195,7 @@ const useStyles = makeStyles(theme => ({
 export default function MiniDrawer() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  // importar nombre del departamento
-  //const nombreUsuario = localStorage.getItem('nombre')
-  const tipoUsuario = localStorage.getItem('tipoUsuario')
-
+ 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -301,11 +299,11 @@ export default function MiniDrawer() {
           </IconButton>
         </div>
         <Divider />
-        { tipoUsuario === '1' ? 
+        { JSON.parse(localStorage.getItem('usuario')).tipo === '1' ? 
         (<List>
           {list.map((item, index) => (
             <NavLink to={item.route} key={index}>
-              <ListItem button key={item.name}>
+              <ListItem button key={index}>
                 <ListItemIcon className={(classes.botones, classes.gris)}>
                   {item.icon}
                 </ListItemIcon>
@@ -316,7 +314,7 @@ export default function MiniDrawer() {
         </List>) : 
         (<List>
             <NavLink to={list[2].route} key={2}>
-              <ListItem button key={list[2].name}>
+              <ListItem button key={2}>
                 <ListItemIcon className={(classes.botones, classes.gris)}>
                   {list[2].icon}
                 </ListItemIcon>

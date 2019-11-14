@@ -9,10 +9,13 @@ import CantTotalEquipos from "./components/CantTotalEquipos/CanTotalEquipos";
 
 export default class AppRouter extends React.Component {
   render() {
-    const us = localStorage.getItem("tipoUsuario");
+    const us = JSON.parse(localStorage.getItem('usuario'));
+    console.log("usuario")
+    console.log(us)
+    console.log(us.tipo == "1")
     return (
       <Switch>
-        {us === "1" ? (
+        {us.tipo === "1" ? (
           // Rutas para el admin
           <React.Fragment>
             <Route path="/menu/decanato" component={Decanato} />
