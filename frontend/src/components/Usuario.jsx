@@ -8,7 +8,7 @@ const lookupDepartamento = (departamentos) => {
   let lookup = {}
   departamentos.map((departamento,i) => 
     (
-  lookup[departamento.idunidad] = departamento.nombre
+  lookup[departamento.iddepartamento] = departamento.nombre
   ))
   console.log(lookup)
   return lookup
@@ -57,7 +57,7 @@ export default function Usuario() {
   async function postUsuario(datos){
     await API.post("/api.usuario",
     {      
-      fkUnidadid: departamentos.find( departamento => departamento.idunidad == datos.fkUnidadid.idunidad),
+      fkIddepartamento: departamentos.find( departamento => departamento.iddepartamento == datos.fkIddepartamento.iddepartamento),
       cedula: datos.cedula,
       contrasenna: datos.cedula,
       nombre: datos.nombre,
@@ -87,7 +87,7 @@ export default function Usuario() {
   async function updateUsuario(newData, oldData){
     await API.put("/api.usuario/"+oldData.cedula,
     {
-      fkUnidadid: departamentos.find( departamento => departamento.idunidad == newData.fkUnidadid.idunidad),
+      fkIddepartamento: departamentos.find( departamento => departamento.iddepartamento == newData.fkIddepartamento.iddepartamento),
       cedula: newData.cedula,
       contrasenna: oldData.cedula,
       nombre: newData.nombre,
@@ -162,7 +162,7 @@ export default function Usuario() {
                 { title: 'Apellido', field: 'apellido' },
                 { title: 'Correo', field: 'correo' },
                 { title: 'Tipo', field: 'tipo', lookup: {1:"Administrador", 2:"Empleado"}},
-                { title: 'Unidad', field: 'fkUnidadid.idunidad', lookup: lookupDepartamento(departamentos) },
+                { title: 'Departamento', field: 'fkIddepartamento.iddepartamento', lookup: lookupDepartamento(departamentos) },
                 { title: 'Estatus', field: 'estatus', lookup: {A:"Activo",I:"Inactivo"}}
               ]}
       data={usuarios} //Aqui es donde se cargan los datos del Get en la tabla
@@ -180,8 +180,9 @@ export default function Usuario() {
             setTimeout(() => {
               resolve();
               console.log(oldData);
-              console.log("Usuario Actualizado: " + newData);
               updateUsuario(newData, oldData)
+              console.log("Usuario Actualizado: ");
+              console.log(newData);
             }, 600);
           }),
           onRowDelete: oldData =>
