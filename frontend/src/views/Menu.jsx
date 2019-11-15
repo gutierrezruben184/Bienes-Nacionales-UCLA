@@ -31,45 +31,51 @@ import Container from '@material-ui/core/Container';
 
 const list = [
   {
+    name: "Home",
+    route: "/menu/home",
+    key: 1,
+    icon: <HomeWorkIcon />
+  },
+  {
     name: "Decanato",
     route: "/menu/decanato",
-    key: 1,
+    key: 2,
     icon: <HomeWorkIcon />
   },
   {
     name: "Departamentos",
     route: "/menu/departamento",
-    key: 2,
+    key: 3,
     icon: <HomeWorkIcon />
   },
   {
     name: "Equipos",
     route: "/menu/equipo",
-    key: 3,
+    key: 4,
     icon: <LaptopWindowsIcon />
   },
   {
     name: "Marcas",
     route: "/menu/marca",
-    key: 4,
+    key: 5,
     icon: <PeopleAltIcon />
   },
   {
-    name: "Empleados",
-    route: "/menu/empleados",
-    key: 5,
+    name: "Reporte Solicitudes",
+    route: "/menu/solicitudes",
+    key: 6,
     icon: <PeopleAltIcon />
   },
   {
     name: "Cantidad",
     route: "/menu/totalequipos",
-    key: 6,
+    key: 7,
     icon: <PeopleAltIcon />
   },
   {
     name: "Usuarios",
     route: "/menu/usuario",
-    key: 7,
+    key: 8,
     icon: <PeopleAltIcon />
   },
 ];

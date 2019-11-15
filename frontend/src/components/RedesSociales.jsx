@@ -9,18 +9,25 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import image from '../assets/img/ucla.jpg';
 
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
     },
+    image: {
+        backgroundImage: `url(${image})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      },
     paper: {
       padding: theme.spacing(2),
       textAlign: 'center',
       color: theme.palette.text.secondary,
     },
     card: {
-        maxWidth: 345,
+        maxWidth: 300,
       },
       media: {
         height: 140,
@@ -31,73 +38,36 @@ export default function MediaCard() {
   const classes = useStyles();
 
   return (
-<div className={classes.root}>
+<section>
+<div>
+<Grid container spacing={3}  direction="row" >
 
-    <Grid container spacing={3}>
-            <Grid item xs>
-            <Paper className={classes.paper}>
-                    <CardActionArea >
-                        <CardMedia className={classes.media} component="img" height="140" image="/img/instagram.jpg" title="@uclave"/>
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                ¡Siguenos en Instagram!
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                            Instagram es una red social y aplicación para postear fotos, noticias, videos y historias, siguenos como @uclave
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                        <CardActions>
-                            <Button size="small" align="right" color="primary" href="https://www.instagram.com/uclave/">
-                            Ir a Instagram
-                            </Button>
-                        </CardActions>
-                    </Paper>
-            </Grid>
+<Grid item xs={8}>
+    <Paper spacing={2}>
+    <img src={image} height = "500"/>
+    </Paper>
+</Grid> 
 
-            <Grid item xs>
-            <Paper className={classes.paper}>
-                    <CardActionArea>
-                        <CardMedia className={classes.media} component="img" height="100" image="/img/facebook.jpg" title="@uclave"/>
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                ¡Regalanos un like en Facebook!
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                            Mantente al día con la información actual de la Universidad
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                    <CardActions>
-                        <Button size="small" align="right" color="primary" href="https://www.facebook.com/UCLAve/">
-                        Ir a Facebook 
-                        </Button>
-                    </CardActions>
-                </Paper>
-            </Grid>
-
-            <Grid item xs>
-            <Paper className={classes.paper}>
-                <CardActionArea>
-                    <CardMedia className={classes.media} component="img" image="/img/twitter.jpg" title="@uclave"/>
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                            ¡Siguenos en Twitter!
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                        Mantente informado de todas nuestras publicaciones
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-                <CardActions>
-                    <Button size="small" align="right" color="primary" href="https://twitter.com/UCLAve">
-                    Ir a Twitter
-                    </Button>
-                </CardActions>
-                </Paper>
-            </Grid>
-    </Grid>
+<Grid item xs={3} justify="center">
+    <Paper spacing={2}>
+    <div class="fb-page" 
+        data-href="https://www.facebook.com/UCLAve" 
+        data-tabs="timeline" 
+        data-width="" 
+        data-height="" 
+        data-small-header="false" 
+        data-adapt-container-width="true" 
+        data-hide-cover="false" 
+        data-show-facepile="false">
+            <blockquote cite="https://www.facebook.com/UCLAve" 
+            class="fb-xfbml-parse-ignore">
+                <a href="https://www.facebook.com/UCLAve">Universidad Centroccidental &quot;Lisandro Alvarado&quot; - UCLA</a></blockquote>
+        </div>
+    </Paper>
+</Grid>
+</Grid> 
 </div>
-    
+</section>
+
   );
 }

@@ -163,7 +163,7 @@ export default function Usuario() {
                 { title: 'Correo', field: 'correo' },
                 { title: 'Tipo', field: 'tipo', lookup: {1:"Administrador", 2:"Empleado"}},
                 { title: 'Departamento', field: 'fkIddepartamento.iddepartamento', lookup: lookupDepartamento(departamentos) },
-                { title: 'Estatus', field: 'estatus', lookup: {A:"Activo",I:"Inactivo"}}
+                { title: 'Estatus', field: 'estatus', lookup: {a:"Activo",i:"Inactivo"}}
               ]}
       data={usuarios} //Aqui es donde se cargan los datos del Get en la tabla
       editable={{

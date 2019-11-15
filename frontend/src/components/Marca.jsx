@@ -1,128 +1,102 @@
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
-import axios from "axios";
 import Swal from 'sweetalert2';
-
-
-const localhost= '192.168.43.244:8080'
+import API from "../utils/API";
 
 export default function MaterialTableDemo() {
-  const [state, setState] = React.useState([]);
+  const [marcas, setMarcas] = React.useState([]);
 
   async function getMarcas(){
-    try{
-      const response = await axios({
-        url: `http://localhost:8080/backend/webresources/api.marca`,
-        method: 'GET'
+    await API.get("/api.marca")
+      .then(
+      res => {
+        //console.log(res.data)
+        setMarcas(res.data)
       })
-      return response.data
-  
-    } catch(e){
-      console.log(e)
-  
-    }
+      .catch(e => {
+        console.log("error" + e);
+      })
   }
 
   useEffect(() => {
-    async function loadMarcas () {
-      const response = await getMarcas()
-        //console.log(response)
-        setState(response)
-            
-    }
-    loadMarcas()
+    getMarcas()
   }, []);
 
   async function refresh() {
-    const response = await getMarcas()
-      setState(response)
+    await getMarcas()
   }
 
-  async function addMarca(datos){
-    try{
-      const response = await axios({
-        url: `http://localhost:8080/backend/webresources/api.marca`,
-        method: 'POST',
-        data: {
-                idmarca: datos.idmarca,
-                nombre: datos.nombre,                
-              }
-      })
-      refresh();
-      Swal.fire(
+  async function addMarca(newData){
+    await API.post("/api.marca",
+    {
+      idmarca: newData.idmarca,
+      nombre: newData.nombre,
+    }
+    )
+    .then(res => {
+        Swal.fire(
         'Listo!',
         'Marca Agregada con Exito!',
         'success'
       )
-      return response.data
-      } catch(e){
-        console.log(e)
+        refresh()
+      })
+      .catch(error => {
+        console.log(error)
         Swal.fire({
           type: 'error',
           title: 'Oops...',
           text: 'Algo salió mal!',
         })
-    }
+      })
   }
+
+
 
   async function updateMarcas(newData, oldData){
-    try{
-      const response = await axios({
-        url: `http://localhost:8080/backend/webresources/api.marca/`+oldData.idmarca,
-        method: 'PUT',
-        data: {
-                idmarca: newData.idmarca,
-                nombre: newData.nombre,
-              }
-      })
-      refresh();
-      Swal.fire(
+    await API.put("/api.marca/"+oldData.idmarca,
+    {
+      idmarca: newData.idmarca,
+      nombre: newData.nombre,
+    }
+    )
+    .then(res => {
+        Swal.fire(
         'Listo!',
-        'Marca Actualizada con Exito!',
+        'Marca modificada con Exito!',
         'success'
       )
-      return response.data
-      } catch(e){
-        console.log(e)
+      refresh()
+      })
+      .catch(error => {
+        console.log(error)
         Swal.fire({
           type: 'error',
           title: 'Oops...',
           text: 'Algo salió mal!',
         })
-    }
+      })
   }
 
-
   async function DeleteMarcas(idmarca){
-    try{
-
-      
-      
-      const response = await axios({
-        url: `http://localhost:8080/backend/webresources/api.marca/${idmarca}`,
-        method: 'DELETE'
-      })
-      
-      let resultado = state.filter( state => (
-        idmarca != idmarca
-   ));
-        refresh();
+   await API.delete("/api.marca/"+idmarca,
+    )
+    .then(res => {
         Swal.fire(
-          'Listo!',
-          'Marca Eliminada con Exito!',
-          'success'
-        )
-        setState(resultado)
-
-    } catch(e){
-      console.log(e)
-      Swal.fire({
-        type: 'error',
-        title: 'Oops...',
-        text: 'Algo salió mal!',
+        'Listo!',
+        'Marca Eliminada con Exito!',
+        'success'
+      )
+        refresh()
       })
-
-    }
+      .catch(error => {
+        console.log(error)
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Algo salió mal!',
+        })
+      })
     
   }
 
@@ -133,7 +107,7 @@ export default function MaterialTableDemo() {
       columns={[
         { title: 'ID Marca', field: 'idmarca' },
         { title: 'Nombre', field: 'nombre' }]}
-      data={state}
+      data={marcas}
       editable={{
         onRowAdd: newData =>
           new Promise(resolve => {

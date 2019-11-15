@@ -88,4 +88,10 @@ public class ReporteSolicitudFacadeREST extends AbstractFacade<ReporteSolicitud>
         return em;
     }
     
+    @GET
+    @Path("/solicitud/{tip}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<ReporteSolicitud> getReporteSolicitud(@PathParam("tip") String tip) {
+        return em.createNamedQuery("ReporteSolicitud.findByTipo").setParameter("tipo",tip).getResultList();
+    }
 }

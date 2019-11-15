@@ -6,6 +6,8 @@ import Marca from "./components/Marca";
 import Equipo from "./components/Equipo";
 import Usuario from "./components/Usuario";
 import CantTotalEquipos from "./components/CantTotalEquipos/CanTotalEquipos";
+import Navegacion from "./components/Solicitudes/Navegacion";
+import RedesSociales from "./components/RedesSociales";
 
 export default class AppRouter extends React.Component {
   render() {
@@ -24,6 +26,9 @@ export default class AppRouter extends React.Component {
             <Route path="/menu/equipo" component={Equipo} />
             <Route path="/menu/usuario" component={Usuario} />
             <Route path="/menu/totalequipos" component={CantTotalEquipos} />
+            <Route path="/menu/solicitudes" component={Navegacion} />
+            <Route path="/menu/home" component={RedesSociales} />
+            <Redirect from="/menu" to="/menu/home" />
           </React.Fragment>
         ) : (
           // Rutas para el empleado
