@@ -21,25 +21,24 @@ export default function MaterialTableDemo() {
     await getDepartamentos()
   }
 
-  async function getDepartamentos(){
+  async function getDepartamentos() {
     await API.get("/api.departamento")
       .then(
-      res => {
-        setDepartamentos(res.data)
-      })
+        res => {
+          setDepartamentos(res.data)
+        })
       .catch(e => {
         console.log("error" + e);
       })
   }
 
-  async function getDecanatos(){
+  async function getDecanatos() {
     await API.get("/api.decanato")
       .then(
-      res => {
-        console.log(res.data)
-        setDecanato(res.data)
-        lookupDecanatos(res.data)
-      })
+        res => {
+          setDecanato(res.data)
+          lookupDecanatos(res.data)
+        })
       .catch(e => {
         console.log("error" + e);
       })
@@ -50,20 +49,20 @@ export default function MaterialTableDemo() {
     getDecanatos()
   }, []);
 
-  async function postDepartamentos(datos){
-      await API.post("/api.departamento",
-        {
-          nombre: datos.nombre,
-          fkDecanatoid: decanatos.find( decanato => decanato.iddecanato == datos.fkDecanatoid.iddecanato ),
-          estatus: datos.estatus,          
-        }
-      )
+  async function postDepartamentos(datos) {
+    await API.post("/api.departamento",
+      {
+        nombre: datos.nombre,
+        fkIddecanato: decanatos.find(decanato => decanato.iddecanato == datos.fkIddecanato.iddecanato),
+        estatus: datos.estatus,
+      }
+    )
       .then(res => {
         Swal.fire(
-        'Listo!',
-        'Departamento Agregado con Exito!',
-        'success'
-      )
+          'Listo!',
+          'Departamento Agregado con Exito!',
+          'success'
+        )
         refresh()
       }).catch(error => {
         console.log(error)
@@ -75,22 +74,22 @@ export default function MaterialTableDemo() {
       })
   }
 
-  async function updateDepartamentos(newData, oldData){
-      await API.put("/api.departamento/"+oldData.idunidad,
-        {
-          nombre: newData.nombre,
-          fkDecanatoid: newData.fkDecanatoid,
-          estatus: newData.estatus,
-          idunidad  : newData.idunidad     
-        }
-      ).then(res => {
-        Swal.fire(
+  async function updateDepartamentos(newData, oldData) {
+    await API.put("/api.departamento/" + oldData.iddepartamento,
+      {
+        nombre: newData.nombre,
+        fkIddecanato: newData.fkIddecanato,
+        estatus: newData.estatus,
+        iddepartamento: newData.iddepartamento
+      }
+    ).then(res => {
+      Swal.fire(
         'Listo!',
         'Departamento Modificado con Exito!',
         'success'
       )
-        refresh()
-      })
+      refresh()
+    })
       .catch(error => {
         console.log(error)
         Swal.fire({
@@ -101,13 +100,13 @@ export default function MaterialTableDemo() {
       })
   }
 
-  async function deleteDepartamentos(id){
-    await API.delete("/api.departamento/"+id,)
+  async function deleteDepartamentos(id) {
+    await API.delete("/api.departamento/" + id)
       .then(res => {
         Swal.fire(
-        'Listo!',
-        'Departamento Eliminado con Exito!',
-        'success'
+          'Listo!',
+          'Departamento Eliminado con Exito!',
+          'success'
         )
         refresh()
       })
@@ -122,9 +121,9 @@ export default function MaterialTableDemo() {
   }
 
   useEffect(() => {
-    async function loadDepartamentos () {
+    async function loadDepartamentos() {
       const response = await getDepartamentos()
-        setState(response)
+      setState(response)
     }
     loadDepartamentos()
   }, []);
@@ -132,30 +131,30 @@ export default function MaterialTableDemo() {
   return (
     <MaterialTable
       title="Lista de Departamentos"
-      localization = {{
-        header:{
+      localization={{
+        header: {
           actions: "Acciones"
         },
         body: {
-          addTooltip:"Agregar Departamento",
-          deleteTooltip:"Eliminar Departamento",
-          editTooltip:"Editar Departamento",
-            editRow: {
-              deleteText: '¿Desea eliminar el Departamento?',
-              cancelTooltip: 'Cancelar',
-              saveTooltip:'Guardar'
+          addTooltip: "Agregar Departamento",
+          deleteTooltip: "Eliminar Departamento",
+          editTooltip: "Editar Departamento",
+          editRow: {
+            deleteText: '¿Desea eliminar el Departamento?',
+            cancelTooltip: 'Cancelar',
+            saveTooltip: 'Guardar'
           },
         },
-        toolbar:{
+        toolbar: {
           searchPlaceholder: 'Buscar'
         }
       }}
       columns={[
         { title: 'Nombre', field: 'nombre' },
-        { title: 'Decanato', field: 'fkDecanatoid.iddecanato', lookup: lookupDecanatos(decanatos) },
-        { title: 'Estatus', field: 'estatus', lookup: {A:"Activo",I:"Inactivo"} }
-        ]}
-        data={departamentos}
+        { title: 'Decanato', field: 'fkIddecanato.iddecanato', lookup: lookupDecanatos(decanatos) },
+        { title: 'Estatus', field: 'estatus', lookup: { a: "Activo", i: "Inactivo" } }
+      ]}
+      data={departamentos}
       editable={{
         onRowAdd: newData =>
           new Promise(resolve => {
@@ -175,7 +174,7 @@ export default function MaterialTableDemo() {
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              deleteDepartamentos(oldData.idunidad);
+              deleteDepartamentos(oldData.iddepartamento);
             }, 600);
           }),
       }}
